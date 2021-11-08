@@ -1,7 +1,7 @@
 package com.example.banktransaction.controller;
 
+import com.example.banktransaction.controller.dto.user.UserRequestModel;
 import com.example.banktransaction.service.UserService;
-import com.example.banktransaction.web.dto.UserRegistrationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +17,8 @@ public class UserRegistrationController {
     private UserService userService;
 
     @ModelAttribute("user")
-    public UserRegistrationDto userRegistrationDto(){
-        return new UserRegistrationDto();
+    public UserRequestModel userRequestModel(){
+        return new UserRequestModel();
     }
 
     @GetMapping
@@ -27,8 +27,8 @@ public class UserRegistrationController {
     }
 
     @PostMapping
-    public String registerUserAccount(@ModelAttribute("user")UserRegistrationDto registrationDto){
-     userService.save(registrationDto);
+    public String registerUserAccount(@ModelAttribute("user")UserRequestModel registrationDto){
+     //userService.save(registrationDto);
      return "redirect:/registration?success";
     }
 }

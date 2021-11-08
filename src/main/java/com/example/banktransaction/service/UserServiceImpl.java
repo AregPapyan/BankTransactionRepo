@@ -1,10 +1,10 @@
 package com.example.banktransaction.service;
 
-import com.example.banktransaction.model.Authority;
-import com.example.banktransaction.model.User;
-import com.example.banktransaction.repository.AuthorityRepository;
-import com.example.banktransaction.repository.UserRepository;
-import com.example.banktransaction.web.dto.UserRegistrationDto;
+import com.example.banktransaction.persistence.authority.Authority;
+import com.example.banktransaction.persistence.authority.AuthorityRepository;
+import com.example.banktransaction.persistence.authority.AuthorityType;
+import com.example.banktransaction.persistence.user.User;
+import com.example.banktransaction.persistence.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +20,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
    private UserRepository userRepository;
 
-    @Override
-    public User save(UserRegistrationDto registrationDto) {
-        User user = new User(registrationDto.getFirstName(), registrationDto.getLastName(),registrationDto.getEmail(), registrationDto.getPassword());
-        Set<Authority> authorities = new HashSet<>();
-        authorities.add(authorityRepository.getByName("ROLE_USER"));
-        user.setAuthorities(authorities);
-        return userRepository.save(user);
-    }
+//    @Override
+//    public User save(UserRegistrationDto registrationDto) {
+//        User user = new User(registrationDto.getFirstName(), registrationDto.getLastName(),registrationDto.getEmail(), registrationDto.getPassword());
+//        Set<Authority> authorities = new HashSet<>();
+//        authorities.add(authorityRepository.getByName(AuthorityType.USER));
+//        user.setAuthorities(authorities);
+//        return userRepository.save(user);
+//    }
 }

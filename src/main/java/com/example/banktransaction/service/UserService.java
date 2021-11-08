@@ -1,8 +1,7 @@
 package com.example.banktransaction.service;
 
-import com.example.banktransaction.model.User;
-import com.example.banktransaction.web.dto.UserRegistrationDto;
+import com.example.banktransaction.persistence.user.User;
 
 public interface UserService {
-    User save(UserRegistrationDto registrationDto);
+    //User save(UserRegistrationDto registrationDto);
 }

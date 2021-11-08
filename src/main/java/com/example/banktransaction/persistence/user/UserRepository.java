@@ -1,6 +1,6 @@
-package com.example.banktransaction.repository;
+package com.example.banktransaction.persistence.user;
 
-import com.example.banktransaction.model.User;
+import com.example.banktransaction.persistence.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

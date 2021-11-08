@@ -1,4 +1,4 @@
-package persistence.account;
+package com.example.banktransaction.persistence.account;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

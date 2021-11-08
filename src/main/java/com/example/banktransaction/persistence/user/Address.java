@@ -1,4 +1,4 @@
-package com.example.banktransaction.model;
+package com.example.banktransaction.persistence.user;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -7,50 +7,42 @@ import java.util.Date;
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
     private Long id;
 
-    @Column
     private String country;
 
-    @Column
     private String city;
 
-    @Column
     private String street;
 
-    @Column
     private int houseNumber;
 
-    @Column
     private String postalCode;
 
-    @Column
-    private Date createdDate;
+    private Date dateCreated;
 
-    @Column
     private Date lastUpdated;
 
-    public Address() {
-    }
-
-    public Address(String country, String city, String street, int houseNumber, String postalCode, Date createdDate, Date lastUpdated) {
-        this.country = country;
-        this.city = city;
-        this.street = street;
-        this.houseNumber = houseNumber;
-        this.postalCode = postalCode;
-        this.createdDate = createdDate;
-        this.lastUpdated = lastUpdated;
-    }
+//    public Address() {
+//    }
+//
+//    public Address(String country, String city, String street, int houseNumber, String postalCode, Date dateCreated, Date lastUpdated) {
+//        this.country = country;
+//        this.city = city;
+//        this.street = street;
+//        this.houseNumber = houseNumber;
+//        this.postalCode = postalCode;
+//        this.dateCreated = dateCreated;
+//        this.lastUpdated = lastUpdated;
+//    }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
 
     public String getCountry() {
         return country;
@@ -92,12 +84,12 @@ public class Address {
         this.postalCode = postalCode;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public Date getDateCreated() {
+        return dateCreated;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     public Date getLastUpdated() {
