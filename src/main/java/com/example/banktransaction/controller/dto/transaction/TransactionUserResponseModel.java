@@ -12,6 +12,7 @@ public class TransactionUserResponseModel {
     private AccountUserResponseModel from;
     private AccountUserResponseModel to;
     private Date dateCreated;
+    private Date lastUpdated;
     private Status status;
 
     public TransactionType getType() {
@@ -52,6 +53,14 @@ public class TransactionUserResponseModel {
 
     public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
     public Status getStatus() {
