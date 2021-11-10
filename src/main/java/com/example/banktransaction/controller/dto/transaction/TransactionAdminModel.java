@@ -1,28 +1,27 @@
-package persistence.transaction;
+package com.example.banktransaction.controller.dto.transaction;
 
-import persistence.Status;
-import persistence.account.Account;
+import com.example.banktransaction.controller.dto.account.AccountAdminModel;
+import com.example.banktransaction.persistence.Status;
+import com.example.banktransaction.persistence.transaction.TransactionType;
 
-import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-public class Transaction {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class TransactionAdminModel {
     private Long id;
     private TransactionType type;
     private Double amount;
-    @ManyToOne
-    private Account from;
-    @ManyToOne
-    private Account to;
+    private AccountAdminModel from;
+    private AccountAdminModel to;
     private Date dateCreated;
     private Date lastUpdated;
     private Status status;
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public TransactionType getType() {
@@ -41,19 +40,19 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public Account getFrom() {
+    public AccountAdminModel getFrom() {
         return from;
     }
 
-    public void setFrom(Account from) {
+    public void setFrom(AccountAdminModel from) {
         this.from = from;
     }
 
-    public Account getTo() {
+    public AccountAdminModel getTo() {
         return to;
     }
 
-    public void setTo(Account to) {
+    public void setTo(AccountAdminModel to) {
         this.to = to;
     }
 

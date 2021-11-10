@@ -1,4 +1,4 @@
-package persistence.account;
+package com.example.banktransaction.persistence.account;
 
 public enum Currency {
     USD,

@@ -1,5 +1,7 @@
-package com.example.banktransaction.model;
+package com.example.banktransaction.persistence.user;
 
+import com.example.banktransaction.persistence.account.Account;
+import com.example.banktransaction.persistence.authority.Authority;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 
@@ -8,48 +10,39 @@ import java.util.Date;
 import java.util.Set;
 
 @Entity
+//@Table(uniqueConstraints={@UniqueConstraint(columnNames={"email",})})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
     private Long id;
 
-    @Column(name = "first_name", nullable = false)
     @NotNull
     private String firstName;
 
-
-    @Column(name = "last_name", nullable = false)
     @NotNull
     private String lastName;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", unique = true)
     @NotNull
     private String email;
 
-    @Column(name = "password", nullable = false)
     @NotNull
     private String password;
 
-    @Column
     private Date birthDate;
-
-    @Column
     private String mobile;
 
-    @Column
-    private Date createdDate;
-
-    @Column
+    @ManyToOne
+    private Address address;
+    private Date dateCreated;
     private Date lastUpdated;
 
-    @JsonIgnore
+//    @JsonIgnore
     @ManyToMany
-    @JoinTable(name = "user_authority",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
+//    @JoinTable(name = "user_authority",
+//            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+//            inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
     private Set<Authority> authorities;
-
 
     public User() {}
 
@@ -59,26 +52,26 @@ public class User {
         this.email = email;
         this.password = password;
     }
-
-    public User(String firstName, String lastName, String email, String password, Date birthDate, String mobile,
-                Date createdDate, Date lastUpdated) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.birthDate = birthDate;
-        this.mobile = mobile;
-        this.createdDate = createdDate;
-        this.lastUpdated = lastUpdated;
-    }
+//
+//    public User(String firstName, String lastName, String email, String password, Date birthDate, String mobile,
+//                Date dateCreated, Date lastUpdated) {
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.email = email;
+//        this.password = password;
+//        this.birthDate = birthDate;
+//        this.mobile = mobile;
+//        this.dateCreated = dateCreated;
+//        this.lastUpdated = lastUpdated;
+//    }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
 
     public String getFirstName() {
         return firstName;
@@ -128,12 +121,12 @@ public class User {
         this.mobile = mobile;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public Date getDateCreated() {
+        return dateCreated;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     public Date getLastUpdated() {
@@ -150,5 +143,13 @@ public class User {
 
     public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }

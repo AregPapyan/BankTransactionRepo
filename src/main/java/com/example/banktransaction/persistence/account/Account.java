@@ -1,11 +1,10 @@
-package persistence.account;
+package com.example.banktransaction.persistence.account;
 
-import persistence.Status;
+import com.example.banktransaction.persistence.Status;
+import com.example.banktransaction.persistence.user.User;
+import com.sun.istack.NotNull;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -13,11 +12,16 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
+    @Column(unique = true)
     private String number;
     private Currency currency;
     private Date dateCreated;
     private Date lastUpdated;
     private Status status;
+    @ManyToOne
+    @NotNull
+    private User user;
 
     public Long getId() {
         return id;
@@ -61,5 +65,13 @@ public class Account {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
