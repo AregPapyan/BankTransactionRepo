@@ -8,6 +8,9 @@ import com.example.banktransaction.persistence.authority.AuthorityRepository;
 import com.example.banktransaction.persistence.authority.AuthorityType;
 import com.example.banktransaction.persistence.user.User;
 import com.example.banktransaction.persistence.user.UserRepository;
+import javassist.NotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -21,6 +24,9 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final AuthorityRepository authorityRepository;
     private final UserConverter userConverter;
+
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRepository userRepository, AuthorityRepository authorityRepository, UserConverter userConverter) {
         this.userRepository = userRepository;
@@ -53,6 +59,28 @@ public class UserServiceImpl implements UserService {
         adding.setAuthorities(authorities);
         User added = userRepository.save(adding);
         return userConverter.userToResponse(added);
+    }
+
+    @Override
+    public void login(String email, String password) throws NotFoundException {
+        User user = new User();
+        user = getByEmail(email);
+        if(user == null){
+            throw new NotFoundException("Invalid Username");
+        }
+
+            boolean isPasswordMatches = passwordEncoder.matches(
+                    password,
+                    user.getPassword()
+            );
+        if(!isPasswordMatches){
+            throw new NotFoundException("Invalid Username");
+        }
+    }
+
+    @Override
+    public User getByEmail(String email) {
+        return userRepository.getByEmail(email);
     }
 
 
