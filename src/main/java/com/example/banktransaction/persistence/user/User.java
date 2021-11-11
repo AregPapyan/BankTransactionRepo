@@ -32,12 +32,12 @@ public class User {
     private Date birthDate;
     private String mobile;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Address address;
     private Date dateCreated;
     private Date lastUpdated;
 
-//    @JsonIgnore
+    @JsonIgnore
     @ManyToMany
 //    @JoinTable(name = "user_authority",
 //            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),

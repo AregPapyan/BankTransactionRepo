@@ -16,9 +16,6 @@ public class Authority {
         return id;
     }
 
-//    public void setId(int id) {
-//        this.id = id;
-//    }
 
     public AuthorityType getName() {
         return name;
