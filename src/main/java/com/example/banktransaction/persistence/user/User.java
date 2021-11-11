@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.Set;
 
 @Entity
-//@Table(uniqueConstraints={@UniqueConstraint(columnNames={"email",})})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,9 +38,8 @@ public class User {
 
     @JsonIgnore
     @ManyToMany
-//    @JoinTable(name = "user_authority",
-//            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-//            inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
+   @JoinTable(name = "user_authority", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+          inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
     private Set<Authority> authorities;
 
     public User() {}
