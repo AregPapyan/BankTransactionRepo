@@ -37,7 +37,7 @@ public class User {
     private Date dateCreated;
     private Date lastUpdated;
 
-//    @JsonIgnore
+    @JsonIgnore
     @ManyToMany
 //    @JoinTable(name = "user_authority",
 //            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
