@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 public class CustomUserDetail implements UserDetails {
@@ -30,7 +31,7 @@ public class CustomUserDetail implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
-        Collection<SimpleGrantedAuthority> grantedAuthorities = new ArrayList<>();
+        List<SimpleGrantedAuthority> grantedAuthorities = new ArrayList<>();
         for (String  authority : authorities) {
             SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(authority);
             grantedAuthorities.add(grantedAuthority);

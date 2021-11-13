@@ -1,5 +1,6 @@
 package com.example.banktransaction.converter;
 
+import com.example.banktransaction.controller.dto.user.UserAdminModel;
 import com.example.banktransaction.controller.dto.user.UserRequestModel;
 import com.example.banktransaction.controller.dto.user.UserResponseModel;
 import com.example.banktransaction.persistence.user.User;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class UserConverter {
@@ -44,5 +47,21 @@ public class UserConverter {
         user.setMobile(request.getMobile());
         user.setAddress(addressConverter.requestToAddress(request.getAddressRequest()));
         return user;
+    }
+    public UserAdminModel userToAdminModel(User user){
+        UserAdminModel userAdminModel = new UserAdminModel();
+        userAdminModel.setId(user.getId());
+        userAdminModel.setFirstName(user.getFirstName());
+        userAdminModel.setLastName(user.getLastName());
+        userAdminModel.setEmail(user.getEmail());
+        userAdminModel.setPassword(user.getPassword());
+        userAdminModel.setBirthDate(user.getBirthDate());
+        userAdminModel.setMobile(user.getMobile());
+        userAdminModel.setAddressAdminModel(addressConverter.addressToAdminModel(user.getAddress()));
+        userAdminModel.setDateCreated(user.getDateCreated());
+        userAdminModel.setLastUpdated(user.getLastUpdated());
+        Set<String> authorityNames = user.getAuthorities().stream().map(authority -> authority.getName().name()).collect(Collectors.toSet());
+        userAdminModel.setAuthorities(authorityNames);
+        return userAdminModel;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.banktransaction.converter;
 
+import com.example.banktransaction.controller.dto.address.AddressAdminModel;
 import com.example.banktransaction.controller.dto.address.AddressUserModel;
 import com.example.banktransaction.persistence.user.Address;
 import org.springframework.stereotype.Component;
@@ -27,5 +28,17 @@ public class AddressConverter {
         address.setHouseNumber(request.getHouseNumber());
         address.setPostalCode(request.getPostalCode());
         return address;
+    }
+    public AddressAdminModel addressToAdminModel(Address address) {
+        AddressAdminModel addressAdminModel = new AddressAdminModel();
+        addressAdminModel.setId(address.getId());
+        addressAdminModel.setCountry(address.getCountry());
+        addressAdminModel.setCity(address.getCity());
+        addressAdminModel.setStreet(address.getStreet());
+        addressAdminModel.setHouseNumber(address.getHouseNumber());
+        addressAdminModel.setPostalCode(address.getPostalCode());
+        addressAdminModel.setDateCreated(address.getDateCreated());
+        addressAdminModel.setLastUpdated(address.getLastUpdated());
+        return addressAdminModel;
     }
 }

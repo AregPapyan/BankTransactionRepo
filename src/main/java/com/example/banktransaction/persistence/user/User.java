@@ -36,40 +36,15 @@ public class User {
     private Date dateCreated;
     private Date lastUpdated;
 
-    @JsonIgnore
-    @ManyToMany
-   @JoinTable(name = "user_authority", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-          inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
+    @ManyToMany(cascade = CascadeType.ALL)
     private Set<Authority> authorities;
 
-    public User() {}
 
-    public User(String firstName, String lastName, String email, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-    }
-//
-//    public User(String firstName, String lastName, String email, String password, Date birthDate, String mobile,
-//                Date dateCreated, Date lastUpdated) {
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.email = email;
-//        this.password = password;
-//        this.birthDate = birthDate;
-//        this.mobile = mobile;
-//        this.dateCreated = dateCreated;
-//        this.lastUpdated = lastUpdated;
-//    }
 
     public Long getId() {
         return id;
     }
 
-//    public void setId(Long id) {
-//        this.id = id;
-//    }
 
     public String getFirstName() {
         return firstName;
