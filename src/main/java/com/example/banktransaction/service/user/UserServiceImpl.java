@@ -1,6 +1,7 @@
 package com.example.banktransaction.service.user;
 
 import com.example.banktransaction.config.CustomUserDetail;
+import com.example.banktransaction.controller.dto.user.UserAdminModel;
 import com.example.banktransaction.controller.dto.user.UserRequestModel;
 import com.example.banktransaction.controller.dto.user.UserResponseModel;
 import com.example.banktransaction.converter.UserConverter;
@@ -35,9 +36,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserResponseModel> getAll() {
+    public List<UserAdminModel> getAll() {
         List<User> all = userRepository.findAll();
-        return userConverter.usersToResponses(all);
+        return userConverter.usersToAdminModels(all);
     }
 
     @Override

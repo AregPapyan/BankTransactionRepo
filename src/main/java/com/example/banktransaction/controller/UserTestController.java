@@ -1,5 +1,6 @@
 package com.example.banktransaction.controller;
 
+import com.example.banktransaction.controller.dto.user.UserAdminModel;
 import com.example.banktransaction.controller.dto.user.UserRequestModel;
 import com.example.banktransaction.controller.dto.user.UserResponseModel;
 import com.example.banktransaction.service.user.UserService;
@@ -21,7 +22,7 @@ public class UserTestController {
 
     @GetMapping("/user")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public ResponseEntity<List<UserResponseModel>> getAll(Authentication authentication){
+    public ResponseEntity<List<UserAdminModel>> getAll(Authentication authentication){
         return ResponseEntity.ok(userService.getAll());
     }
     @GetMapping("/user/{id}")

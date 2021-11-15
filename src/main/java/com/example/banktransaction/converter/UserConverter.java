@@ -27,6 +27,7 @@ public class UserConverter {
         response.setEmail(user.getEmail());
         response.setBirthDate(user.getBirthDate());
         response.setMobile(user.getMobile());
+        response.setAuthorities(user.getAuthorities().stream().map(authority -> authority.getName().name()).collect(Collectors.toSet()));
         response.setAddressUserModel(addressConverter.addressToUserModel(user.getAddress()));
         return response;
     }
@@ -63,5 +64,12 @@ public class UserConverter {
         Set<String> authorityNames = user.getAuthorities().stream().map(authority -> authority.getName().name()).collect(Collectors.toSet());
         userAdminModel.setAuthorities(authorityNames);
         return userAdminModel;
+    }
+    public List<UserAdminModel> usersToAdminModels(List<User> users){
+        List<UserAdminModel> adminModels = new ArrayList<>();
+        for(User user:users){
+            adminModels.add(userToAdminModel(user));
+        }
+        return adminModels;
     }
 }
