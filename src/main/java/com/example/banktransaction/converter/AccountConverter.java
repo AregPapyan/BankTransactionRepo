@@ -1,10 +1,14 @@
 package com.example.banktransaction.converter;
 
 import com.example.banktransaction.controller.dto.account.AccountAdminModel;
+import com.example.banktransaction.controller.dto.account.AccountUserRequestModel;
+import com.example.banktransaction.controller.dto.account.AccountUserResponseModel;
+import com.example.banktransaction.persistence.Status;
 import com.example.banktransaction.persistence.account.Account;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -32,5 +36,27 @@ public class AccountConverter {
             adminModels.add(accountToAdminModel(account));
         }
         return adminModels;
+    }
+    public AccountUserResponseModel accountToResponse(Account account){
+        AccountUserResponseModel response = new AccountUserResponseModel();
+        response.setNumber(account.getNumber());
+        response.setCurrency(account.getCurrency());
+        response.setDateCreated(account.getDateCreated());
+        response.setLastUpdated(account.getLastUpdated());
+        response.setStatus(account.getStatus());
+        return response;
+    }
+    public List<AccountUserResponseModel> accountsToResponses(List<Account> accounts){
+        List<AccountUserResponseModel> responses = new ArrayList<>();
+        for(Account account:accounts){
+            responses.add(accountToResponse(account));
+        }
+        return responses;
+    }
+    public Account requestToAccount(AccountUserRequestModel request){
+        Account account = new Account();
+        account.setNumber(request.getNumber());
+        account.setCurrency(request.getCurrency());
+        return account;
     }
 }

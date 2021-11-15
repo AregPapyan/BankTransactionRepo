@@ -3,8 +3,10 @@ package com.example.banktransaction.controller.dto.user;
 import com.example.banktransaction.controller.dto.address.AddressUserModel;
 
 import java.util.Date;
+import java.util.Set;
 
 public class UserResponseModel {
+
     private String firstName;
 
     private String lastName;
@@ -14,6 +16,8 @@ public class UserResponseModel {
     private Date birthDate;
 
     private String mobile;
+
+    private Set<String> authorities;
 
     private AddressUserModel addressUserModel;
 
@@ -55,6 +59,14 @@ public class UserResponseModel {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public Set<String> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(Set<String> authorities) {
+        this.authorities = authorities;
     }
 
     public AddressUserModel getAddressUserModel() {

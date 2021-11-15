@@ -6,8 +6,8 @@ import com.example.banktransaction.persistence.transaction.TransactionType;
 public class TransactionUserRequestModel {
     private TransactionType type;
     private Double amount;
-    private AccountUserResponseModel from;
-    private AccountUserResponseModel to;
+    private String from;
+    private String to;
 
     public TransactionType getType() {
         return type;
@@ -25,19 +25,19 @@ public class TransactionUserRequestModel {
         this.amount = amount;
     }
 
-    public AccountUserResponseModel getFrom() {
+    public String getFrom() {
         return from;
     }
 
-    public void setFrom(AccountUserResponseModel from) {
+    public void setFrom(String from) {
         this.from = from;
     }
 
-    public AccountUserResponseModel getTo() {
+    public String getTo() {
         return to;
     }
 
-    public void setTo(AccountUserResponseModel to) {
+    public void setTo(String to) {
         this.to = to;
     }
 }
