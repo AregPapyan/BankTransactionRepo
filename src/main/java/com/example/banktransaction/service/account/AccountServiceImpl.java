@@ -57,6 +57,7 @@ public class AccountServiceImpl implements AccountService{
     public AccountAdminModel accept(Long id){
         Account byId = accountRepository.getById(id);
         byId.setStatus(Status.ACCEPTED);
+        byId.setLastUpdated(new Date());
         return accountConverter.accountToAdminModel(accountRepository.save(byId));
     }
     @Override
@@ -64,6 +65,7 @@ public class AccountServiceImpl implements AccountService{
     public AccountAdminModel reject(Long id){
         Account byId = accountRepository.getById(id);
         byId.setStatus(Status.REJECTED);
+        byId.setLastUpdated(new Date());
         return accountConverter.accountToAdminModel(accountRepository.save(byId));
     }
 //    @Override
