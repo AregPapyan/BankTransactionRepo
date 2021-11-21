@@ -73,7 +73,7 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public void updateAccount(AccountUserRequestModel accountUserRequestModel, Authentication authentication) throws NotFoundException {
+    public AccountUserResponseModel updateAccount(AccountUserRequestModel accountUserRequestModel, Authentication authentication) throws NotFoundException {
         if(userService.getIdByAuthentication(authentication) == accountUserRequestModel.getUser_id()){
             Account account = accountRepository.getAccountByNumber(accountUserRequestModel.getNumber());
             Date now = new Date();
@@ -84,6 +84,7 @@ public class AccountServiceImpl implements AccountService{
             account.setUser(userRepository.getById(accountUserRequestModel.getUser_id()));
             account.setCurrency(accountUserRequestModel.getCurrency());
             accountRepository.save(account);
+            return accountConverter.accountToResponse(accountRepository.save(account));
         }else{
             throw  new NotFoundException("You can update only your accounts");
         }

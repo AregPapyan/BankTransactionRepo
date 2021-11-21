@@ -8,6 +8,7 @@ import com.example.banktransaction.persistence.account.AccountRepository;
 import com.example.banktransaction.persistence.transaction.Transaction;
 import com.example.banktransaction.persistence.transaction.TransactionRepository;
 import com.example.banktransaction.service.user.UserService;
+import javassist.NotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +52,7 @@ public class TransactionServiceImpl implements TransactionService{
     }
 
     @Override
-    public void updateTransaction(Long id, TransactionUserRequestModel transactionUserRequestModel, Authentication authentication) {
+    public TransactionUserResponseModel updateTransaction(Long id, TransactionUserRequestModel transactionUserRequestModel, Authentication authentication) throws NotFoundException {
         if(userService.getById(userService.getIdByAuthentication(authentication)).equals(userService.findByEmail(transactionUserRequestModel.getFrom()))){
             Transaction transaction = getById(id);
             /*transaction = transactionConverter.requestToTransaction(transactionUserRequestModel);*/
@@ -63,8 +64,14 @@ public class TransactionServiceImpl implements TransactionService{
                 transaction.setTo(accountRepository.getAccountByNumber(transactionUserRequestModel.getTo()));
                 Date now = new Date();
                 transaction.setLastUpdated(now);
-                transactionRepository.save(transaction);
+              return transactionConverter.transactionToResponse(transactionRepository.save(transaction));
             }
+            else{
+                throw new NotFoundException("You can update only  transactions with PENDING status");
+            }
+        }
+        else{
+            throw new NotFoundException("You can update only your transactions");
         }
     }
 

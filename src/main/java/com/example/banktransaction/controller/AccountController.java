@@ -49,7 +49,7 @@ public class AccountController {
     }
 
     @PutMapping("/update-account")
-    public void updateAccount(@RequestBody AccountUserRequestModel accountUserRequestModel, Authentication authentication) throws NotFoundException {
-        accountService.updateAccount(accountUserRequestModel, authentication);
+    public ResponseEntity<AccountUserResponseModel> updateAccount(@RequestBody AccountUserRequestModel accountUserRequestModel, Authentication authentication) throws NotFoundException {
+       return ResponseEntity.ok(accountService.updateAccount(accountUserRequestModel, authentication));
     }
 }

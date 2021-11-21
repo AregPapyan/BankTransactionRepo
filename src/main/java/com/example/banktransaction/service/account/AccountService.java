@@ -14,5 +14,5 @@ public interface AccountService {
     List<AccountUserResponseModel> getAllByUserId(Long id);
     AccountAdminModel accept(Long id);
     AccountAdminModel reject(Long id);
-    void updateAccount(AccountUserRequestModel accountUserRequestModel, Authentication authentication) throws NotFoundException;
+    AccountUserResponseModel updateAccount(AccountUserRequestModel accountUserRequestModel, Authentication authentication) throws NotFoundException;
 }
