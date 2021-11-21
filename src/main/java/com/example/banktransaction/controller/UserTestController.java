@@ -4,6 +4,7 @@ import com.example.banktransaction.controller.dto.user.UserAdminModel;
 import com.example.banktransaction.controller.dto.user.UserRequestModel;
 import com.example.banktransaction.controller.dto.user.UserResponseModel;
 import com.example.banktransaction.service.user.UserService;
+import javassist.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -33,10 +34,18 @@ public class UserTestController {
     public ResponseEntity<UserResponseModel> add(@RequestBody UserRequestModel request){
         return ResponseEntity.ok(userService.add(request));
     }
+
     @GetMapping("/login")
     public ResponseEntity<UserResponseModel> login(Authentication authentication){
         //System.out.println("This point");
         Long id = userService.getIdByAuthentication(authentication);
         return ResponseEntity.ok(userService.get(id));
     }
+
+    //new
+    @PutMapping("/update")
+    public void update(@RequestBody UserRequestModel request, Authentication authentication) throws NotFoundException {
+        userService.update(request, authentication);
+    }
+
 }

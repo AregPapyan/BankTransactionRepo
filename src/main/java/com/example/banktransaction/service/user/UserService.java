@@ -15,4 +15,6 @@ public interface UserService {
     UserResponseModel add(UserRequestModel request);
     User findByEmail(String email);
     Long getIdByAuthentication(Authentication authentication);
+    void update(UserRequestModel request, Authentication authentication) throws NotFoundException;
+    User getById(Long id);
 }

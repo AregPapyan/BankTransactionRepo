@@ -5,7 +5,10 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
+
 public interface TransactionRepository extends JpaRepository<Transaction,Long> {
     @Query("SELECT t FROM Transaction t WHERE t.from.user.id=?1 OR t.to.user.id=?1")
     List<Transaction> getAllByUserId(Long id);
+
+    Transaction getById(Long id);
 }

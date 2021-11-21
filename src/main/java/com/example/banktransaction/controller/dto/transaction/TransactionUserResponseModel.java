@@ -7,6 +7,7 @@ import com.example.banktransaction.persistence.transaction.TransactionType;
 import java.util.Date;
 
 public class TransactionUserResponseModel {
+    private Long id;
     private TransactionType type;
     private Double amount;
     private AccountUserResponseModel from;
@@ -14,6 +15,14 @@ public class TransactionUserResponseModel {
     private Date dateCreated;
     private Date lastUpdated;
     private Status status;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public TransactionType getType() {
         return type;
@@ -69,5 +78,19 @@ public class TransactionUserResponseModel {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "TransactionUserResponseModel{" +
+                "id=" + id +
+                ", type=" + type +
+                ", amount=" + amount +
+                ", from=" + from +
+                ", to=" + to +
+                ", dateCreated=" + dateCreated +
+                ", lastUpdated=" + lastUpdated +
+                ", status=" + status +
+                '}';
     }
 }

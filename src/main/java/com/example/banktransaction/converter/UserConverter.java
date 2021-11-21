@@ -45,7 +45,8 @@ public class UserConverter {
         user.setEmail(request.getEmail());
         user.setPassword(new BCryptPasswordEncoder().encode(request.getPassword()));
         user.setBirthDate(request.getBirthDate());
-        user.setMobile(request.getMobile());
+        user.setMobile(request.getMobile());//
+        //stegh chi karum vercni address requesty
         user.setAddress(addressConverter.requestToAddress(request.getAddressRequest()));
         return user;
     }
