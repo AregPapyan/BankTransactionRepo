@@ -41,11 +41,4 @@ public class UserTestController {
         Long id = userService.getIdByAuthentication(authentication);
         return ResponseEntity.ok(userService.get(id));
     }
-
-    //new
-    @PutMapping("/update")
-    public void update(@RequestBody UserRequestModel request, Authentication authentication) throws NotFoundException {
-        userService.update(request, authentication);
-    }
-
 }

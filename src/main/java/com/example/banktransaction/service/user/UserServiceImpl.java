@@ -79,26 +79,6 @@ public class UserServiceImpl implements UserService {
         return userDetails.getId();
     }
 
-    //new added by me
-    @Override
-    public void update(UserRequestModel request, Authentication authentication) throws NotFoundException {
-       User updated = getById(getIdByAuthentication(authentication));
-
-            Date now = new Date();
-            updated.setFirstName(request.getFirstName());
-            updated.setLastName(request.getLastName());
-            updated.setEmail(request.getEmail());
-            updated.setMobile(request.getMobile());
-            updated.setBirthDate(request.getBirthDate());
-            updated.setLastUpdated(now);
-            updated.getAddress().setLastUpdated(now);
-            Set<Authority> authorities = new HashSet<>();
-            Authority byName = authorityRepository.getByName(AuthorityType.USER);
-            authorities.add(byName);
-            updated.setAuthorities(authorities);
-            userRepository.save(updated);
-
-    }
 
     @Override
     public User getById(Long id) {
