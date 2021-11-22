@@ -72,4 +72,17 @@ public class UserRequestModel {
     public void setAddressRequest(AddressUserModel addressUserModel) {
         this.addressUserModel = addressUserModel;
     }
+
+    @Override
+    public String toString() {
+        return "UserRequestModel{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", birthDate=" + birthDate +
+                ", mobile='" + mobile + '\'' +
+                ", addressUserModel=" + addressUserModel +
+                '}';
+    }
 }

@@ -15,4 +15,5 @@ public interface UserService {
     UserResponseModel add(UserRequestModel request);
     User findByEmail(String email);
     Long getIdByAuthentication(Authentication authentication);
+    User getById(Long id);
 }

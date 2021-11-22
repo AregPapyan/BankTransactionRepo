@@ -8,6 +8,9 @@ import com.example.banktransaction.persistence.Status;
 import com.example.banktransaction.persistence.account.Account;
 import com.example.banktransaction.persistence.account.AccountRepository;
 import com.example.banktransaction.persistence.user.UserRepository;
+import com.example.banktransaction.service.user.UserService;
+import javassist.NotFoundException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,11 +22,13 @@ public class AccountServiceImpl implements AccountService{
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
     private final AccountConverter accountConverter;
+    private final UserService userService;
 
-    public AccountServiceImpl(AccountRepository accountRepository, UserRepository userRepository, AccountConverter accountConverter) {
+    public AccountServiceImpl(AccountRepository accountRepository, UserRepository userRepository, AccountConverter accountConverter, UserService userService) {
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
         this.accountConverter = accountConverter;
+        this.userService = userService;
     }
 
     @Override
@@ -67,6 +72,24 @@ public class AccountServiceImpl implements AccountService{
         byId.setStatus(Status.REJECTED);
         byId.setLastUpdated(new Date());
         return accountConverter.accountToAdminModel(accountRepository.save(byId));
+    }
+
+    @Override
+    public AccountUserResponseModel updateAccount(AccountUserRequestModel accountUserRequestModel, Authentication authentication) throws NotFoundException {
+        if(userService.getIdByAuthentication(authentication) == accountUserRequestModel.getUser_id()){
+            Account account = accountRepository.getAccountByNumber(accountUserRequestModel.getNumber());
+            Date now = new Date();
+            account.setLastUpdated(now);
+            account.setStatus(Status.PENDING);
+            account.setNumber(accountUserRequestModel.getNumber());
+            //can we change user of account
+            account.setUser(userRepository.getById(accountUserRequestModel.getUser_id()));
+            account.setCurrency(accountUserRequestModel.getCurrency());
+            accountRepository.save(account);
+            return accountConverter.accountToResponse(accountRepository.save(account));
+        }else{
+            throw  new NotFoundException("You can update only your accounts");
+        }
     }
 //    @Override
 //    @Transactional(readOnly = true)

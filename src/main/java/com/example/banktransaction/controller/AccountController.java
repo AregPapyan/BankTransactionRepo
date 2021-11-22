@@ -5,6 +5,7 @@ import com.example.banktransaction.controller.dto.account.AccountUserRequestMode
 import com.example.banktransaction.controller.dto.account.AccountUserResponseModel;
 import com.example.banktransaction.service.account.AccountService;
 import com.example.banktransaction.service.user.UserService;
+import javassist.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -45,5 +46,10 @@ public class AccountController {
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<AccountAdminModel> reject(@PathVariable Long id){
         return ResponseEntity.ok(accountService.reject(id));
+    }
+
+    @PutMapping("/update-account")
+    public ResponseEntity<AccountUserResponseModel> updateAccount(@RequestBody AccountUserRequestModel accountUserRequestModel, Authentication authentication) throws NotFoundException {
+       return ResponseEntity.ok(accountService.updateAccount(accountUserRequestModel, authentication));
     }
 }

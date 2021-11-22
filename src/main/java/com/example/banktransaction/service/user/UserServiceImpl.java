@@ -10,6 +10,7 @@ import com.example.banktransaction.persistence.authority.AuthorityRepository;
 import com.example.banktransaction.persistence.authority.AuthorityType;
 import com.example.banktransaction.persistence.user.User;
 import com.example.banktransaction.persistence.user.UserRepository;
+import javassist.NotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,6 +77,12 @@ public class UserServiceImpl implements UserService {
     public Long getIdByAuthentication(Authentication authentication) {
         CustomUserDetail userDetails = (CustomUserDetail) authentication.getPrincipal();
         return userDetails.getId();
+    }
+
+
+    @Override
+    public User getById(Long id) {
+        return userRepository.getById(id);
     }
 
 }
