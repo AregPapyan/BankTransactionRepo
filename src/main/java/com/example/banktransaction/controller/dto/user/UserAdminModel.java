@@ -28,6 +28,7 @@ public class UserAdminModel {
     private Date dateCreated;
     private Date lastUpdated;
     private Set<String> authorities;
+    private boolean isActive;
 
     public Long getId() {
         return id;
@@ -115,5 +116,13 @@ public class UserAdminModel {
 
     public void setAuthorities(Set<String> authorities) {
         this.authorities = authorities;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

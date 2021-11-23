@@ -15,4 +15,7 @@ public interface UserService {
     UserResponseModel add(UserRequestModel request);
     User findByEmail(String email);
     Long getIdByAuthentication(Authentication authentication);
+    UserResponseModel update(UserRequestModel request, Long id);
+    UserAdminModel deactivate(Long id);
+    UserAdminModel activate(Long id);
 }

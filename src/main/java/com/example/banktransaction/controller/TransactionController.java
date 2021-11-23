@@ -1,15 +1,15 @@
 package com.example.banktransaction.controller;
 
+import com.example.banktransaction.controller.dto.transaction.TransactionAdminModel;
 import com.example.banktransaction.controller.dto.transaction.TransactionUserRequestModel;
 import com.example.banktransaction.controller.dto.transaction.TransactionUserResponseModel;
 import com.example.banktransaction.service.transaction.TransactionService;
 import com.example.banktransaction.service.user.UserService;
+import javassist.tools.web.BadHttpRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,8 +27,27 @@ public class TransactionController {
         Long id = userService.getIdByAuthentication(authentication);
         return ResponseEntity.ok(transactionService.getAllByUserId(id));
     }
+    @GetMapping("/transaction")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseEntity<List<TransactionAdminModel>> getAllGrouped(){
+        return ResponseEntity.ok(transactionService.getAllOrdered());
+    }
+    @GetMapping("/transaction/all")
+    public ResponseEntity<List<TransactionAdminModel>> getAll(){
+        return ResponseEntity.ok(transactionService.getAll());
+    }
     @PostMapping("/transaction")
     public ResponseEntity<TransactionUserResponseModel> add(@RequestBody TransactionUserRequestModel request){
         return ResponseEntity.ok(transactionService.add(request));
+    }
+    @PutMapping("/transaction/accept/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseEntity<TransactionAdminModel> accept(@PathVariable Long id){
+        return ResponseEntity.ok(transactionService.accept(id));
+    }
+    @PutMapping("/transaction/reject/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseEntity<TransactionAdminModel> reject(@PathVariable Long id){
+        return ResponseEntity.ok(transactionService.reject(id));
     }
 }

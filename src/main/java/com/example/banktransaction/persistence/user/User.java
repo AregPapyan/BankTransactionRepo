@@ -38,7 +38,7 @@ public class User {
 
     @ManyToMany(cascade = CascadeType.ALL)
     private Set<Authority> authorities;
-
+    private boolean isActive;
 
 
     public Long getId() {
@@ -124,5 +124,13 @@ public class User {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }
