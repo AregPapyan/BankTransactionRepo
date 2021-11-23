@@ -26,13 +26,19 @@ public class TransactionController {
         return ResponseEntity.ok(transactionService.getAllByUserId(id));
     }
     @PostMapping("/transaction")
-    public ResponseEntity<TransactionUserResponseModel> add(@RequestBody TransactionUserRequestModel request){
-        return ResponseEntity.ok(transactionService.add(request));
+    public ResponseEntity<TransactionUserResponseModel> add(@RequestBody TransactionUserRequestModel request, Authentication authentication) throws NotFoundException {
+        Long userId = userService.getIdByAuthentication(authentication);
+        return ResponseEntity.ok(transactionService.add(request, userId));
     }
 
     @PutMapping("/updateTransaction/{id}")
-    public ResponseEntity<TransactionUserResponseModel> updateTransaction(@PathVariable Long id, @RequestBody TransactionUserRequestModel transactionUserRequestModel, Authentication authentication) throws NotFoundException {
-     return ResponseEntity.ok(transactionService.updateTransaction(id, transactionUserRequestModel, authentication));
+    public ResponseEntity<TransactionUserResponseModel> update(@PathVariable Long id, @RequestBody TransactionUserRequestModel transactionUserRequestModel, Authentication authentication) throws NotFoundException {
+        Long userId = userService.getIdByAuthentication(authentication);
+        return ResponseEntity.ok(transactionService.update(id, transactionUserRequestModel, userId));
     }
-
+//
+//   @DeleteMapping
+//    public void deleteTransaction(@PathVariable Long id, Authentication authentication){
+//      transactionService.deleteTransaction(id, authentication);
+//   }
 }

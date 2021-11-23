@@ -34,8 +34,9 @@ public class AccountController {
         return ResponseEntity.ok(accountService.getAllByUserId(id));
     }
     @PostMapping("/account")
-    public ResponseEntity<AccountUserResponseModel> add(@RequestBody AccountUserRequestModel request){
-        return ResponseEntity.ok(accountService.add(request));
+    public ResponseEntity<AccountUserResponseModel> add(@RequestBody AccountUserRequestModel request,Authentication authentication){
+        Long userId = userService.getIdByAuthentication(authentication);
+        return ResponseEntity.ok(accountService.add(request, userId));
     }
     @PutMapping("/account/accept/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
@@ -48,8 +49,15 @@ public class AccountController {
         return ResponseEntity.ok(accountService.reject(id));
     }
 
-    @PutMapping("/update-account")
-    public ResponseEntity<AccountUserResponseModel> updateAccount(@RequestBody AccountUserRequestModel accountUserRequestModel, Authentication authentication) throws NotFoundException {
-       return ResponseEntity.ok(accountService.updateAccount(accountUserRequestModel, authentication));
+    @PutMapping("/update-account/{number}")
+    public ResponseEntity<AccountUserResponseModel> updateAccount(@RequestBody AccountUserRequestModel accountUserRequestModel, @PathVariable String number, Authentication authentication) throws NotFoundException {
+      Long userId = userService.getIdByAuthentication(authentication);
+       return ResponseEntity.ok(accountService.updateAccount(accountUserRequestModel, number, userId));
     }
+
+//    @DeleteMapping
+//    public void deleteAccount(@PathVariable Long id, Authentication authentication){
+//        accountService.deleteAccount(id, authentication);
+//    }
+
 }

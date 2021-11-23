@@ -10,9 +10,10 @@ import java.util.List;
 
 public interface AccountService {
     List<AccountAdminModel> getRequests();
-    AccountUserResponseModel add(AccountUserRequestModel request);
+    AccountUserResponseModel add(AccountUserRequestModel request, Long userId);
     List<AccountUserResponseModel> getAllByUserId(Long id);
     AccountAdminModel accept(Long id);
     AccountAdminModel reject(Long id);
-    AccountUserResponseModel updateAccount(AccountUserRequestModel accountUserRequestModel, Authentication authentication) throws NotFoundException;
+    AccountUserResponseModel updateAccount(AccountUserRequestModel accountUserRequestModel,String number, Long userId) throws NotFoundException;
+    //void deleteAccount(Long id, Authentication authentication);
 }

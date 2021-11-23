@@ -40,7 +40,14 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     @Transactional
-    public TransactionUserResponseModel add(TransactionUserRequestModel request) {
+    public TransactionUserResponseModel add(TransactionUserRequestModel request, Long userId) throws NotFoundException {
+        if(accountRepository.getAccountByNumber(request.getFrom()).getUser().getId()!=userId){
+            throw new NotFoundException("You can use only your accounts");
+        }
+        else if(accountRepository.getAccountByNumber(request.getFrom()).getStatus()!=Status.ACCEPTED
+                || accountRepository.getAccountByNumber(request.getTo()).getStatus()!=Status.ACCEPTED){
+            throw new NotFoundException("You can use only accepted accounts");
+        }
         Transaction adding = transactionConverter.requestToTransaction(request);
         adding.setFrom(accountRepository.getAccountByNumber(request.getFrom()));
         adding.setTo(accountRepository.getAccountByNumber(request.getTo()));
@@ -52,19 +59,23 @@ public class TransactionServiceImpl implements TransactionService{
     }
 
     @Override
-    public TransactionUserResponseModel updateTransaction(Long id, TransactionUserRequestModel transactionUserRequestModel, Authentication authentication) throws NotFoundException {
-        if(userService.getById(userService.getIdByAuthentication(authentication)).equals(userService.findByEmail(transactionUserRequestModel.getFrom()))){
-            Transaction transaction = getById(id);
-            /*transaction = transactionConverter.requestToTransaction(transactionUserRequestModel);*/
-            System.out.println(transaction);
-            if(transaction.getStatus().toString().equals("PENDING")){
-                transaction.setAmount(transactionUserRequestModel.getAmount());
-                transaction.setType(transactionUserRequestModel.getType());
-                transaction.setFrom(accountRepository.getAccountByNumber(transactionUserRequestModel.getFrom()));
-                transaction.setTo(accountRepository.getAccountByNumber(transactionUserRequestModel.getTo()));
-                Date now = new Date();
-                transaction.setLastUpdated(now);
-              return transactionConverter.transactionToResponse(transactionRepository.save(transaction));
+    @Transactional
+    public TransactionUserResponseModel update(Long id, TransactionUserRequestModel transactionUserRequestModel, Long userId) throws NotFoundException {
+        if(userId == transactionRepository.getById(id).getFrom().getUser().getId()){
+
+            Transaction transaction = transactionRepository.getById(id);
+            if(transaction.getStatus()==Status.PENDING){
+                if(accountRepository.getAccountByNumber(transactionUserRequestModel.getTo()).getStatus() == Status.PENDING){
+                    transaction.setAmount(transactionUserRequestModel.getAmount());
+                    transaction.setType(transactionUserRequestModel.getType());
+                    transaction.setTo(accountRepository.getAccountByNumber(transactionUserRequestModel.getTo()));
+                    Date now = new Date();
+                    transaction.setLastUpdated(now);
+                    return transactionConverter.transactionToResponse(transactionRepository.save(transaction));
+                }else{
+                    throw new NotFoundException("You can use only accepted accounts");
+                }
+
             }
             else{
                 throw new NotFoundException("You can update only  transactions with PENDING status");
@@ -75,8 +86,7 @@ public class TransactionServiceImpl implements TransactionService{
         }
     }
 
-    @Override
-    public Transaction getById(Long id) {
-        return transactionRepository.getById(id);
-    }
+
+
+
 }

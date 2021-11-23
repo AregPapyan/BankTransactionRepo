@@ -40,13 +40,13 @@ public class AccountServiceImpl implements AccountService{
 
     @Override
     @Transactional
-    public AccountUserResponseModel add(AccountUserRequestModel request) {
+    public AccountUserResponseModel add(AccountUserRequestModel request, Long userId) {
         Account adding = accountConverter.requestToAccount(request);
         Date now = new Date();
         adding.setDateCreated(now);
         adding.setLastUpdated(now);
         adding.setStatus(Status.PENDING);
-        adding.setUser(userRepository.getById(request.getUser_id()));
+        adding.setUser(userRepository.getById(userId));
         Account added = accountRepository.save(adding);
         return accountConverter.accountToResponse(added);
     }
@@ -75,26 +75,31 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public AccountUserResponseModel updateAccount(AccountUserRequestModel accountUserRequestModel, Authentication authentication) throws NotFoundException {
-        if(userService.getIdByAuthentication(authentication) == accountUserRequestModel.getUser_id()){
-            Account account = accountRepository.getAccountByNumber(accountUserRequestModel.getNumber());
-            Date now = new Date();
-            account.setLastUpdated(now);
-            account.setStatus(Status.PENDING);
-            account.setNumber(accountUserRequestModel.getNumber());
-            //can we change user of account
-            account.setUser(userRepository.getById(accountUserRequestModel.getUser_id()));
-            account.setCurrency(accountUserRequestModel.getCurrency());
-            accountRepository.save(account);
-            return accountConverter.accountToResponse(accountRepository.save(account));
-        }else{
-            throw  new NotFoundException("You can update only your accounts");
+    public AccountUserResponseModel updateAccount(AccountUserRequestModel accountUserRequestModel,String number,  Long userId) throws NotFoundException {
+        Account accountByNumber = accountRepository.getAccountByNumber(number);
+        if(accountByNumber.getUser().getId()!=userId){
+            throw new NotFoundException("You can update only your accounts");
+        }else if(accountByNumber.getStatus()!=Status.PENDING){
+            throw new NotFoundException("You can't update accepted/rejected account");
+        }
+        else {
+            accountByNumber.setNumber(accountUserRequestModel.getNumber());
+            accountByNumber.setCurrency(accountUserRequestModel.getCurrency());
+            accountByNumber.setLastUpdated(new Date());
+            Account updated = accountRepository.save(accountByNumber);
+            return accountConverter.accountToResponse(updated);
         }
     }
+
 //    @Override
-//    @Transactional(readOnly = true)
-//    public AccountUserResponseModel getAccountByNumber(String number){
-//        Account accountByNumber = accountRepository.getAccountByNumber(number);
-//        return accountConverter.accountToResponse(accountByNumber);
+//    public void deleteAccount(Long id, Authentication authentication) {
+//
+//        boolean can = (id == accountRepository.getById(userService.getIdByAuthentication(authentication)).getUser().getId()) ||
+//                (accountRepository.getById(userService.getIdByAuthentication(authentication)).getUser().getAuthorities().toString().equals("ADMIN"));
+//        if(can){
+//            accountRepository.deleteById(id);
+//        }else {
+//            throw new RuntimeException("You can't delete this account");
+//        }
 //    }
 }
