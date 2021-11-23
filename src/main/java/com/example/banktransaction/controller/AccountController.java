@@ -5,6 +5,7 @@ import com.example.banktransaction.controller.dto.account.AccountUserRequestMode
 import com.example.banktransaction.controller.dto.account.AccountUserResponseModel;
 import com.example.banktransaction.service.account.AccountService;
 import com.example.banktransaction.service.user.UserService;
+import javassist.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -38,8 +39,9 @@ public class AccountController {
         return ResponseEntity.ok(accountService.getUserAccounts(id));
     }
     @PostMapping("/account")
-    public ResponseEntity<AccountUserResponseModel> add(@RequestBody AccountUserRequestModel request){
-        return ResponseEntity.ok(accountService.add(request));
+    public ResponseEntity<AccountUserResponseModel> add(@RequestBody AccountUserRequestModel request,Authentication authentication){
+        Long userId = userService.getIdByAuthentication(authentication);
+        return ResponseEntity.ok(accountService.add(request, userId));
     }
     @PutMapping("/account/accept/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
@@ -51,4 +53,16 @@ public class AccountController {
     public ResponseEntity<AccountAdminModel> reject(@PathVariable Long id){
         return ResponseEntity.ok(accountService.reject(id));
     }
+
+    @PutMapping("/update-account/{number}")
+    public ResponseEntity<AccountUserResponseModel> updateAccount(@RequestBody AccountUserRequestModel accountUserRequestModel, @PathVariable String number, Authentication authentication) throws NotFoundException {
+      Long userId = userService.getIdByAuthentication(authentication);
+       return ResponseEntity.ok(accountService.updateAccount(accountUserRequestModel, number, userId));
+    }
+
+//    @DeleteMapping
+//    public void deleteAccount(@PathVariable Long id, Authentication authentication){
+//        accountService.deleteAccount(id, authentication);
+//    }
+
 }

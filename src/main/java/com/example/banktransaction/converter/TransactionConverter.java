@@ -38,6 +38,7 @@ public class TransactionConverter {
     }
     public TransactionUserResponseModel transactionToResponse(Transaction transaction){
         TransactionUserResponseModel response = new TransactionUserResponseModel();
+        response.setId(transaction.getId());
         response.setType(transaction.getType());
         response.setAmount(transaction.getAmount());
         response.setFrom(accountConverter.accountToResponse(transaction.getFrom()));

@@ -6,6 +6,7 @@ import com.example.banktransaction.persistence.account.Currency;
 import java.util.Date;
 
 public class AccountUserResponseModel {
+
     private String number;
     private Currency currency;
     //The following 3 field are not needed(?)

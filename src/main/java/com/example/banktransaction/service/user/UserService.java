@@ -18,4 +18,5 @@ public interface UserService {
     UserResponseModel update(UserRequestModel request, Long id);
     UserAdminModel deactivate(Long id);
     UserAdminModel activate(Long id);
+    User getById(Long id);
 }

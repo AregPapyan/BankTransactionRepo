@@ -6,6 +6,7 @@ import com.example.banktransaction.controller.dto.transaction.TransactionUserRes
 import com.example.banktransaction.service.transaction.TransactionService;
 import com.example.banktransaction.service.user.UserService;
 import javassist.tools.web.BadHttpRequest;
+import javassist.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -37,8 +38,9 @@ public class TransactionController {
         return ResponseEntity.ok(transactionService.getAll());
     }
     @PostMapping("/transaction")
-    public ResponseEntity<TransactionUserResponseModel> add(@RequestBody TransactionUserRequestModel request){
-        return ResponseEntity.ok(transactionService.add(request));
+    public ResponseEntity<TransactionUserResponseModel> add(@RequestBody TransactionUserRequestModel request, Authentication authentication) throws NotFoundException {
+        Long userId = userService.getIdByAuthentication(authentication);
+        return ResponseEntity.ok(transactionService.add(request, userId));
     }
     @PutMapping("/transaction/accept/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
@@ -50,4 +52,15 @@ public class TransactionController {
     public ResponseEntity<TransactionAdminModel> reject(@PathVariable Long id){
         return ResponseEntity.ok(transactionService.reject(id));
     }
+
+    @PutMapping("/updateTransaction/{id}")
+    public ResponseEntity<TransactionUserResponseModel> update(@PathVariable Long id, @RequestBody TransactionUserRequestModel transactionUserRequestModel, Authentication authentication) throws NotFoundException {
+        Long userId = userService.getIdByAuthentication(authentication);
+        return ResponseEntity.ok(transactionService.update(id, transactionUserRequestModel, userId));
+    }
+//
+//   @DeleteMapping
+//    public void deleteTransaction(@PathVariable Long id, Authentication authentication){
+//      transactionService.deleteTransaction(id, authentication);
+//   }
 }
