@@ -40,6 +40,8 @@ public class User {
     private Set<Authority> authorities;
 
 
+    private boolean isActive;
+
 
     public Long getId() {
         return id;
@@ -124,5 +126,13 @@ public class User {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

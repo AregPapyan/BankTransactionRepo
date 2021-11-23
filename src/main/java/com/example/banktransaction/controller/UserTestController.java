@@ -41,4 +41,9 @@ public class UserTestController {
         Long id = userService.getIdByAuthentication(authentication);
         return ResponseEntity.ok(userService.get(id));
     }
+/*
+    @DeleteMapping
+    public void deleteUser(@PathVariable Long id, Authentication authentication){
+        userService.deleteUser(id,authentication);
+    }*/
 }
