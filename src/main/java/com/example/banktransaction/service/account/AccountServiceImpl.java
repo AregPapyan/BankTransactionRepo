@@ -33,8 +33,8 @@ public class AccountServiceImpl implements AccountService{
 
     @Override
     @Transactional(readOnly = true)
-    public List<AccountAdminModel> getRequests() {
-        List<Account> requests = accountRepository.getRequests();
+    public List<AccountAdminModel> getAll() {
+        List<Account> requests = accountRepository.findAll();
         return accountConverter.accountsToAdminModels(requests);
     }
 
@@ -56,6 +56,12 @@ public class AccountServiceImpl implements AccountService{
     public List<AccountUserResponseModel> getAllByUserId(Long id){
         List<Account> allByUserId = accountRepository.getAllByUserId(id);
         return accountConverter.accountsToResponses(allByUserId);
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public List<AccountAdminModel> getUserAccounts(Long id){
+        List<Account> allByUserId = accountRepository.getAllByUserId(id);
+        return accountConverter.accountsToAdminModels(allByUserId);
     }
     @Override
     @Transactional

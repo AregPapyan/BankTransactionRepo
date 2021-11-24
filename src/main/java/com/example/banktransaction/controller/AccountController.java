@@ -26,12 +26,17 @@ public class AccountController {
     @GetMapping("/account")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<List<AccountAdminModel>> getRequests(){
-        return ResponseEntity.ok(accountService.getRequests());
+        return ResponseEntity.ok(accountService.getAll());
     }
     @GetMapping("/user/account")
     public ResponseEntity<List<AccountUserResponseModel>> getAllByUserId(Authentication authentication){
         Long id = userService.getIdByAuthentication(authentication);
         return ResponseEntity.ok(accountService.getAllByUserId(id));
+    }
+    @GetMapping("/accounts/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseEntity<List<AccountAdminModel>> getUserAccounts(@PathVariable Long id){
+        return ResponseEntity.ok(accountService.getUserAccounts(id));
     }
     @PostMapping("/account")
     public ResponseEntity<AccountUserResponseModel> add(@RequestBody AccountUserRequestModel request,Authentication authentication){

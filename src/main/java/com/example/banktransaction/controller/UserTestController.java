@@ -41,9 +41,19 @@ public class UserTestController {
         Long id = userService.getIdByAuthentication(authentication);
         return ResponseEntity.ok(userService.get(id));
     }
-/*
-    @DeleteMapping
-    public void deleteUser(@PathVariable Long id, Authentication authentication){
-        userService.deleteUser(id,authentication);
-    }*/
+    @PutMapping("/update")
+    public ResponseEntity<UserResponseModel> update(@RequestBody UserRequestModel request, Authentication authentication){
+        Long id = userService.getIdByAuthentication(authentication);
+        return ResponseEntity.ok(userService.update(request, id));
+    }
+    @PutMapping("/user/activate/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseEntity<UserAdminModel> activate(@PathVariable Long id){
+        return ResponseEntity.ok(userService.activate(id));
+    }
+    @PutMapping("/user/deactivate/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseEntity<UserAdminModel> deactivate(@PathVariable Long id){
+        return ResponseEntity.ok(userService.deactivate(id));
+    }
 }
