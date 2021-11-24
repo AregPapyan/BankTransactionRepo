@@ -20,7 +20,21 @@ public class UserTestController {
     public UserTestController(UserService userService) {
         this.userService = userService;
     }
-
+    @PutMapping("/update")
+    public ResponseEntity<UserResponseModel> update(@RequestBody UserRequestModel request, Authentication authentication){
+        Long id = userService.getIdByAuthentication(authentication);
+        return ResponseEntity.ok(userService.update(request, id));
+    }
+    @PutMapping("/user/activate/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseEntity<UserAdminModel> activate(@PathVariable Long id){
+        return ResponseEntity.ok(userService.activate(id));
+    }
+    @PutMapping("/user/deactivate/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseEntity<UserAdminModel> deactivate(@PathVariable Long id){
+        return ResponseEntity.ok(userService.deactivate(id));
+    }
     @GetMapping("/user")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<List<UserAdminModel>> getAll(Authentication authentication){

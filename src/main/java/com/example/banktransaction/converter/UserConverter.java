@@ -64,6 +64,7 @@ public class UserConverter {
         userAdminModel.setLastUpdated(user.getLastUpdated());
         Set<String> authorityNames = user.getAuthorities().stream().map(authority -> authority.getName().name()).collect(Collectors.toSet());
         userAdminModel.setAuthorities(authorityNames);
+        userAdminModel.setActive(user.isActive());
         return userAdminModel;
     }
     public List<UserAdminModel> usersToAdminModels(List<User> users){

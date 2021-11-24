@@ -16,6 +16,25 @@ public class TransactionConverter {
         this.accountConverter = accountConverter;
     }
 
+    public List<TransactionAdminModel> transactionsToAdminModels(List<Transaction> transactions){
+        List<TransactionAdminModel> adminModels = new ArrayList<>();
+        for(Transaction transaction:transactions){
+            adminModels.add(transactionToAdminModel(transaction));
+        }
+        return adminModels;
+    }
+    public TransactionAdminModel transactionToAdminModel(Transaction transaction){
+        TransactionAdminModel adminModel = new TransactionAdminModel();
+        adminModel.setId(transaction.getId());
+        adminModel.setType(transaction.getType());
+        adminModel.setAmount(transaction.getAmount());
+        adminModel.setFrom(accountConverter.accountToAdminModel(transaction.getFrom()));
+        adminModel.setTo(accountConverter.accountToAdminModel(transaction.getTo()));
+        adminModel.setDateCreated(transaction.getDateCreated());
+        adminModel.setLastUpdated(transaction.getLastUpdated());
+        adminModel.setStatus(transaction.getStatus());
+        return adminModel;
+    }
     public TransactionUserResponseModel transactionToResponse(Transaction transaction){
         TransactionUserResponseModel response = new TransactionUserResponseModel();
         response.setId(transaction.getId());

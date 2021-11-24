@@ -10,6 +10,10 @@ import java.util.List;
 
 public interface TransactionService {
     List<TransactionUserResponseModel> getAllByUserId(Long id);
+    List<TransactionAdminModel> getAllOrdered();
+    List<TransactionAdminModel> getAll();
+    TransactionAdminModel accept(Long id);
+    TransactionAdminModel reject(Long id);
     TransactionUserResponseModel add(TransactionUserRequestModel request, Long userId) throws NotFoundException;
     TransactionUserResponseModel update(Long id, TransactionUserRequestModel transactionUserRequestModel, Long userId) throws NotFoundException;
 

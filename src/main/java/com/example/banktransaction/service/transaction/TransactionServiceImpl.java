@@ -1,5 +1,6 @@
 package com.example.banktransaction.service.transaction;
 
+import com.example.banktransaction.controller.dto.transaction.TransactionAdminModel;
 import com.example.banktransaction.controller.dto.transaction.TransactionUserRequestModel;
 import com.example.banktransaction.controller.dto.transaction.TransactionUserResponseModel;
 import com.example.banktransaction.converter.TransactionConverter;
@@ -33,9 +34,38 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     @Transactional(readOnly = true)
+    public List<TransactionAdminModel> getAllOrdered(){
+        List<Transaction> allGrouped = transactionRepository.getAllOrdered();
+        return transactionConverter.transactionsToAdminModels(allGrouped);
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public List<TransactionAdminModel> getAll(){
+        List<Transaction> all = transactionRepository.findAll();
+        return transactionConverter.transactionsToAdminModels(all);
+    }
+    @Override
+    @Transactional(readOnly = true)
     public List<TransactionUserResponseModel> getAllByUserId(Long id) {
-        List<Transaction> allByUserId = transactionRepository.getAllByUserId(id);
-        return transactionConverter.transactionsToResponses(allByUserId);
+        @@ -57,6 +71,22 @@ else if(accountRepository.getAccountByNumber(request.getFrom()).getStatus()!=Sta
+        adding.setStatus(Status.PENDING);
+        return transactionConverter.transactionToResponse(transactionRepository.save(adding));
+    }
+    @Override
+    @Transactional
+    public TransactionAdminModel accept(Long id){
+        Transaction byId = transactionRepository.getById(id);
+        byId.setStatus(Status.ACCEPTED);
+        byId.setLastUpdated(new Date());
+        return transactionConverter.transactionToAdminModel(transactionRepository.save(byId));
+    }
+    @Override
+    @Transactional
+    public TransactionAdminModel reject(Long id){
+        Transaction byId = transactionRepository.getById(id);
+        byId.setStatus(Status.REJECTED);
+        byId.setLastUpdated(new Date());
+        return transactionConverter.transactionToAdminModel(transactionRepository.save(byId));
     }
 
     @Override
@@ -65,7 +95,7 @@ public class TransactionServiceImpl implements TransactionService{
 
             Transaction transaction = transactionRepository.getById(id);
             if(transaction.getStatus()==Status.PENDING){
-                if(accountRepository.getAccountByNumber(transactionUserRequestModel.getTo()).getStatus() == Status.PENDING){
+                if(accountRepository.getAccountByNumber(transactionUserRequestModel.getTo()).getStatus() == Status.ACCEPTED){
                     transaction.setAmount(transactionUserRequestModel.getAmount());
                     transaction.setType(transactionUserRequestModel.getType());
                     transaction.setTo(accountRepository.getAccountByNumber(transactionUserRequestModel.getTo()));

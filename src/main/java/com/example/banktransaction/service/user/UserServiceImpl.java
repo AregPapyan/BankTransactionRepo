@@ -62,6 +62,7 @@ public class UserServiceImpl implements UserService {
         Authority byName = authorityRepository.getByName(AuthorityType.USER);
         authorities.add(byName);
         adding.setAuthorities(authorities);
+        adding.setActive(true);
         User added = userRepository.save(adding);
         return userConverter.userToResponse(added);
     }
@@ -73,6 +74,44 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email);
     }
 
+    @Override
+    @Transactional
+    public UserResponseModel update(UserRequestModel request, Long id){
+        User updating = userRepository.getById(id);
+        Date now = new Date();
+        updating.setFirstName(request.getFirstName());
+        updating.setLastName(request.getLastName());
+        updating.setEmail(request.getEmail());
+        updating.setPassword(new BCryptPasswordEncoder().encode(request.getPassword()));
+        updating.setBirthDate(request.getBirthDate());
+        updating.setMobile(request.getMobile());
+        updating.getAddress().setCountry(request.getAddressRequest().getCountry());
+        updating.getAddress().setCity(request.getAddressRequest().getCity());
+        updating.getAddress().setStreet(request.getAddressRequest().getStreet());
+        updating.getAddress().setHouseNumber(request.getAddressRequest().getHouseNumber());
+        updating.getAddress().setPostalCode(request.getAddressRequest().getPostalCode());
+        updating.setLastUpdated(now);
+        User updated = userRepository.save(updating);
+        return userConverter.userToResponse(updated);
+    }
+
+    @Override
+    @Transactional
+    public UserAdminModel deactivate(Long id) {
+        User byId = userRepository.getById(id);
+        byId.setActive(false);
+        byId.setLastUpdated(new Date());
+        return userConverter.userToAdminModel(userRepository.save(byId));
+    }
+
+    @Override
+    @Transactional
+    public UserAdminModel activate(Long id) {
+        User byId = userRepository.getById(id);
+        byId.setActive(true);
+        byId.setLastUpdated(new Date());
+        return userConverter.userToAdminModel(userRepository.save(byId));
+    }
     @Override
     public Long getIdByAuthentication(Authentication authentication) {
         CustomUserDetail userDetails = (CustomUserDetail) authentication.getPrincipal();
