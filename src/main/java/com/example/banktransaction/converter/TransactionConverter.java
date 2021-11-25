@@ -1,5 +1,6 @@
 package com.example.banktransaction.converter;
 
+import com.example.banktransaction.controller.dto.transaction.TransactionAdminModel;
 import com.example.banktransaction.controller.dto.transaction.TransactionUserRequestModel;
 import com.example.banktransaction.controller.dto.transaction.TransactionUserResponseModel;
 import com.example.banktransaction.persistence.transaction.Transaction;

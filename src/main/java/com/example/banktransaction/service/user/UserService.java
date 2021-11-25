@@ -19,6 +19,4 @@ public interface UserService {
     UserAdminModel deactivate(Long id);
     UserAdminModel activate(Long id);
     User getById(Long id);
-/*
-    void deleteUser(Long id, Authentication authentication);*/
 }

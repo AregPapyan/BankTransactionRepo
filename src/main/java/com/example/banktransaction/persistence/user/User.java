@@ -38,9 +38,9 @@ public class User {
 
     @ManyToMany(cascade = CascadeType.ALL)
     private Set<Authority> authorities;
-
-
     private boolean isActive;
+
+
 
 
     public Long getId() {

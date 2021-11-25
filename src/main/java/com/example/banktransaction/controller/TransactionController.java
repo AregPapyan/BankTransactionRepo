@@ -5,6 +5,7 @@ import com.example.banktransaction.controller.dto.transaction.TransactionUserReq
 import com.example.banktransaction.controller.dto.transaction.TransactionUserResponseModel;
 import com.example.banktransaction.service.transaction.TransactionService;
 import com.example.banktransaction.service.user.UserService;
+import javassist.tools.web.BadHttpRequest;
 import javassist.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,13 +35,8 @@ public class TransactionController {
     }
     @PutMapping("/transaction/reject/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public ResponseEntity<TransactionAdminModel> reject(@PathVariable Long id){
+    public ResponseEntity<TransactionAdminModel> reject(@PathVariable Long id) {
         return ResponseEntity.ok(transactionService.reject(id));
-    }
-    @PostMapping("/transaction")
-    public ResponseEntity<TransactionUserResponseModel> add(@RequestBody TransactionUserRequestModel request, Authentication authentication) throws NotFoundException {
-        Long userId = userService.getIdByAuthentication(authentication);
-        return ResponseEntity.ok(transactionService.add(request, userId));
     }
     @GetMapping("/transaction")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
@@ -51,6 +47,12 @@ public class TransactionController {
     public ResponseEntity<List<TransactionAdminModel>> getAll(){
         return ResponseEntity.ok(transactionService.getAll());
     }
+    @PostMapping("/transaction")
+    public ResponseEntity<TransactionUserResponseModel> add(@RequestBody TransactionUserRequestModel request, Authentication authentication) throws NotFoundException {
+        Long userId = userService.getIdByAuthentication(authentication);
+        return ResponseEntity.ok(transactionService.add(request, userId));
+    }
+
 
     @PutMapping("/updateTransaction/{id}")
     public ResponseEntity<TransactionUserResponseModel> update(@PathVariable Long id, @RequestBody TransactionUserRequestModel transactionUserRequestModel, Authentication authentication) throws NotFoundException {

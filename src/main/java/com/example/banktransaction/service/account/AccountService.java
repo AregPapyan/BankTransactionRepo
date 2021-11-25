@@ -16,5 +16,5 @@ public interface AccountService {
     AccountAdminModel accept(Long id);
     AccountAdminModel reject(Long id);
     AccountUserResponseModel updateAccount(AccountUserRequestModel accountUserRequestModel,String number, Long userId) throws NotFoundException;
-    //void deleteAccount(Long id, Authentication authentication);
+
 }

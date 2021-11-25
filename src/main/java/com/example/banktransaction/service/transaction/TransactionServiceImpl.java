@@ -8,6 +8,8 @@ import com.example.banktransaction.persistence.Status;
 import com.example.banktransaction.persistence.account.AccountRepository;
 import com.example.banktransaction.persistence.transaction.Transaction;
 import com.example.banktransaction.persistence.transaction.TransactionRepository;
+
+import javassist.tools.web.BadHttpRequest;
 import com.example.banktransaction.service.user.UserService;
 import javassist.NotFoundException;
 import org.springframework.security.core.Authentication;
@@ -33,6 +35,12 @@ public class TransactionServiceImpl implements TransactionService{
     }
 
     @Override
+    public List<TransactionUserResponseModel> getAllByUserId(Long id) {
+        List<Transaction> allByUserId = transactionRepository.getAllByUserId(id);
+        return transactionConverter.transactionsToResponses(allByUserId);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<TransactionAdminModel> getAllOrdered(){
         List<Transaction> allGrouped = transactionRepository.getAllOrdered();
@@ -44,13 +52,13 @@ public class TransactionServiceImpl implements TransactionService{
         List<Transaction> all = transactionRepository.findAll();
         return transactionConverter.transactionsToAdminModels(all);
     }
-    @Override
-    @Transactional(readOnly = true)
-    public List<TransactionUserResponseModel> getAllByUserId(Long id) {
-        @@ -57,6 +71,22 @@ else if(accountRepository.getAccountByNumber(request.getFrom()).getStatus()!=Sta
-        adding.setStatus(Status.PENDING);
-        return transactionConverter.transactionToResponse(transactionRepository.save(adding));
-    }
+//    @Override
+//    @Transactional(readOnly = true)
+//    public List<TransactionUserResponseModel> getAllByUserId(Long id) {
+//        @@ -57,6 +71,22 @@ else if(accountRepository.getAccountByNumber(request.getFrom()).getStatus()!=Sta
+//        adding.setStatus(Status.PENDING);
+//        return transactionConverter.transactionToResponse(transactionRepository.save(adding));
+//    }
     @Override
     @Transactional
     public TransactionAdminModel accept(Long id){
@@ -115,8 +123,5 @@ public class TransactionServiceImpl implements TransactionService{
             throw new NotFoundException("You can update only your transactions");
         }
     }
-
-
-
 
 }

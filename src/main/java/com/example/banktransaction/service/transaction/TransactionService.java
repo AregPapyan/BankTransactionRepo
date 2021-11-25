@@ -1,7 +1,10 @@
 package com.example.banktransaction.service.transaction;
 
+import com.example.banktransaction.controller.dto.transaction.TransactionAdminModel;
 import com.example.banktransaction.controller.dto.transaction.TransactionUserRequestModel;
 import com.example.banktransaction.controller.dto.transaction.TransactionUserResponseModel;
+
+import javassist.tools.web.BadHttpRequest;
 import com.example.banktransaction.persistence.transaction.Transaction;
 import javassist.NotFoundException;
 import org.springframework.security.core.Authentication;
@@ -17,5 +20,4 @@ public interface TransactionService {
     TransactionUserResponseModel add(TransactionUserRequestModel request, Long userId) throws NotFoundException;
     TransactionUserResponseModel update(Long id, TransactionUserRequestModel transactionUserRequestModel, Long userId) throws NotFoundException;
 
-    //void deleteTransaction(Long id, Authentication authentication);
 }
