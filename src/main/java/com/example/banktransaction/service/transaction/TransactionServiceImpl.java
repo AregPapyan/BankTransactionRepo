@@ -65,6 +65,7 @@ public class TransactionServiceImpl implements TransactionService{
         Transaction adding = transactionConverter.requestToTransaction(request);
         adding.setFrom(accountRepository.getAccountByNumber(request.getFrom()));
         adding.setTo(accountRepository.getAccountByNumber(request.getTo()));
+        adding.setActive(true);
         Date now = new Date();
         adding.setDateCreated(now);
         adding.setLastUpdated(now);
@@ -114,6 +115,39 @@ public class TransactionServiceImpl implements TransactionService{
         else{
             throw new NotFoundException("You can update only your transactions");
         }
+    }
+
+    @Override
+    public TransactionUserResponseModel deActivate(Long id, Long userId) throws NotFoundException {
+        Transaction transaction = transactionRepository.getById(id);
+        if(!transaction.isActive()){
+            throw new NotFoundException("Already inactive");
+        }
+        if(transaction.getStatus().equals(Status.ACCEPTED) || transaction.getStatus().equals(Status.REJECTED)){
+            throw new NotFoundException("You can deActive only  transactions with PENDING status");
+        }
+        if(transaction.getFrom().getUser().getId() != userId){
+            throw new NotFoundException("You can delete only your transactions");
+        }else{
+            transaction.setActive(false);
+            transaction.setLastUpdated(new Date());
+        }
+        return transactionConverter.transactionToResponse(transactionRepository.save(transaction));
+    }
+
+    @Override
+    public TransactionUserResponseModel activate(Long id, Long userId) throws NotFoundException {
+        Transaction transaction = transactionRepository.getById(id);
+        if(transaction.isActive()){
+            throw new NotFoundException("Already Active");
+        }
+        if(transaction.getFrom().getUser().getId() != userId){
+            throw new NotFoundException("You can activate only your transactions");
+        }else{
+            transaction.setActive(true);
+            transaction.setLastUpdated(new Date());
+        }
+        return transactionConverter.transactionToResponse(transactionRepository.save(transaction));
     }
 
 }

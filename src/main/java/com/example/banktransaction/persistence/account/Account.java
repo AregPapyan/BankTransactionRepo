@@ -23,6 +23,8 @@ public class Account {
     @NotNull
     private User user;
 
+    private boolean isActive;
+
     public Long getId() {
         return id;
     }
@@ -75,6 +77,14 @@ public class Account {
         this.user = user;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
@@ -85,6 +95,7 @@ public class Account {
                 ", lastUpdated=" + lastUpdated +
                 ", status=" + status +
                 ", user=" + user +
+                ", isActive=" + isActive +
                 '}';
     }
 }

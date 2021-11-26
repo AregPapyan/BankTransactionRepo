@@ -15,6 +15,7 @@ public class TransactionAdminModel {
     private Date dateCreated;
     private Date lastUpdated;
     private Status status;
+    private boolean isActive;
 
     public Long getId() {
         return id;
@@ -78,5 +79,13 @@ public class TransactionAdminModel {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

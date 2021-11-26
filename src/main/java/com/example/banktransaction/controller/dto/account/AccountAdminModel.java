@@ -14,6 +14,7 @@ public class AccountAdminModel {
     private Date lastUpdated;
     private Status status;
     private UserAdminModel userAdminModel;
+    private boolean isActive;
 
     public Long getId() {
         return id;
@@ -69,5 +70,13 @@ public class AccountAdminModel {
 
     public void setUserAdminModel(UserAdminModel userAdminModel) {
         this.userAdminModel = userAdminModel;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

@@ -34,6 +34,7 @@ public class TransactionConverter {
         adminModel.setDateCreated(transaction.getDateCreated());
         adminModel.setLastUpdated(transaction.getLastUpdated());
         adminModel.setStatus(transaction.getStatus());
+        adminModel.setActive(transaction.isActive());
         return adminModel;
     }
     public TransactionUserResponseModel transactionToResponse(Transaction transaction){
@@ -46,6 +47,7 @@ public class TransactionConverter {
         response.setDateCreated(transaction.getDateCreated());
         response.setLastUpdated(transaction.getLastUpdated());
         response.setStatus(transaction.getStatus());
+        response.setActive(transaction.isActive());
         return response;
     }
     public List<TransactionUserResponseModel> transactionsToResponses(List<Transaction> transactions){
