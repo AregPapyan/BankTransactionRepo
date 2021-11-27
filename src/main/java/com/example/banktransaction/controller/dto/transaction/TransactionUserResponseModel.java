@@ -15,6 +15,7 @@ public class TransactionUserResponseModel {
     private Date dateCreated;
     private Date lastUpdated;
     private Status status;
+    private boolean isActive;
 
     public Long getId() {
         return id;
@@ -80,6 +81,14 @@ public class TransactionUserResponseModel {
         this.status = status;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
     @Override
     public String toString() {
         return "TransactionUserResponseModel{" +
@@ -91,6 +100,7 @@ public class TransactionUserResponseModel {
                 ", dateCreated=" + dateCreated +
                 ", lastUpdated=" + lastUpdated +
                 ", status=" + status +
+                ", isActive=" + isActive +
                 '}';
     }
 }

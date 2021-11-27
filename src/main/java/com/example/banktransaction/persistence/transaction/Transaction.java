@@ -21,6 +21,8 @@ public class Transaction {
     private Date lastUpdated;
     private Status status;
 
+    private boolean isActive;
+
     public Long getId() {
         return id;
     }
@@ -81,7 +83,13 @@ public class Transaction {
         this.status = status;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
 
+    public void setActive(boolean active) {
+        isActive = active;
+    }
 
     @Override
     public String toString() {
@@ -94,6 +102,7 @@ public class Transaction {
                 ", dateCreated=" + dateCreated +
                 ", lastUpdated=" + lastUpdated +
                 ", status=" + status +
+                ", isActive=" + isActive +
                 '}';
     }
 }

@@ -13,6 +13,7 @@ public class AccountUserResponseModel {
     private Date dateCreated;
     private Date lastUpdated;
     private Status status;
+    private boolean isActive;
 
     public String getNumber() {
         return number;
@@ -52,5 +53,13 @@ public class AccountUserResponseModel {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

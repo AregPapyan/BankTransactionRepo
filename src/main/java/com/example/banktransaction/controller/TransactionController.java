@@ -59,9 +59,21 @@ public class TransactionController {
         Long userId = userService.getIdByAuthentication(authentication);
         return ResponseEntity.ok(transactionService.update(id, transactionUserRequestModel, userId));
     }
-//
-//   @DeleteMapping
-//    public void deleteTransaction(@PathVariable Long id, Authentication authentication){
-//      transactionService.deleteTransaction(id, authentication);
-//   }
+
+    @PutMapping("/transaction-de-activate/{id}")
+    @PreAuthorize("hasAnyAuthority('USER')")
+    public ResponseEntity<TransactionUserResponseModel> deActivate(@PathVariable Long id, Authentication authentication) throws NotFoundException {
+        Long userId = userService.getIdByAuthentication(authentication);
+        return ResponseEntity.ok(transactionService.deActivate(id, userId));
+    }
+
+    @PutMapping("/transaction-activate/{id}")
+    @PreAuthorize("hasAnyAuthority('USER')")
+    public ResponseEntity<TransactionUserResponseModel> activate(@PathVariable Long id, Authentication authentication) throws NotFoundException {
+        Long userId = userService.getIdByAuthentication(authentication);
+        return ResponseEntity.ok(transactionService.activate(id, userId));
+    }
+
+
+
 }

@@ -54,15 +54,17 @@ public class AccountController {
         return ResponseEntity.ok(accountService.reject(id));
     }
 
-    @PutMapping("/update-account/{number}")
-    public ResponseEntity<AccountUserResponseModel> updateAccount(@RequestBody AccountUserRequestModel accountUserRequestModel, @PathVariable String number, Authentication authentication) throws NotFoundException {
-      Long userId = userService.getIdByAuthentication(authentication);
-       return ResponseEntity.ok(accountService.updateAccount(accountUserRequestModel, number, userId));
+    @PutMapping("/account-de-activate/{id}")
+    public ResponseEntity<AccountUserResponseModel> deActivate(@PathVariable Long id, Authentication authentication) throws NotFoundException {
+        Long userId = userService.getIdByAuthentication(authentication);
+        return ResponseEntity.ok(accountService.deActivate(id, userId));
     }
 
-//    @DeleteMapping
-//    public void deleteAccount(@PathVariable Long id, Authentication authentication){
-//        accountService.deleteAccount(id, authentication);
-//    }
+    @PutMapping("/account-activate/{id}")
+    public ResponseEntity<AccountUserResponseModel> activate(@PathVariable Long id, Authentication authentication) throws NotFoundException {
+        Long userId = userService.getIdByAuthentication(authentication);
+        return ResponseEntity.ok(accountService.activate(id, userId));
+    }
+
 
 }

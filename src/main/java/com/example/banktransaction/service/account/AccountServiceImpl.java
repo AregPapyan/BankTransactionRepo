@@ -7,6 +7,7 @@ import com.example.banktransaction.converter.AccountConverter;
 import com.example.banktransaction.persistence.Status;
 import com.example.banktransaction.persistence.account.Account;
 import com.example.banktransaction.persistence.account.AccountRepository;
+import com.example.banktransaction.persistence.authority.AuthorityType;
 import com.example.banktransaction.persistence.user.UserRepository;
 import com.example.banktransaction.service.user.UserService;
 import javassist.NotFoundException;
@@ -14,8 +15,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountServiceImpl implements AccountService{
@@ -41,6 +44,7 @@ public class AccountServiceImpl implements AccountService{
     @Transactional
     public AccountUserResponseModel add(AccountUserRequestModel request, Long userId) {
         Account adding = accountConverter.requestToAccount(request);
+        adding.setActive(true);
         Date now = new Date();
         adding.setDateCreated(now);
         adding.setLastUpdated(now);
@@ -79,7 +83,7 @@ public class AccountServiceImpl implements AccountService{
         return accountConverter.accountToAdminModel(accountRepository.save(byId));
     }
 
-    @Override
+  @Override
     public AccountUserResponseModel updateAccount(AccountUserRequestModel accountUserRequestModel,String number,  Long userId) throws NotFoundException {
         Account accountByNumber = accountRepository.getAccountByNumber(number);
         if(accountByNumber.getUser().getId()!=userId){
@@ -96,15 +100,49 @@ public class AccountServiceImpl implements AccountService{
         }
     }
 
-//    @Override
-//    public void deleteAccount(Long id, Authentication authentication) {
-//
-//        boolean can = (id == accountRepository.getById(userService.getIdByAuthentication(authentication)).getUser().getId()) ||
-//                (accountRepository.getById(userService.getIdByAuthentication(authentication)).getUser().getAuthorities().toString().equals("ADMIN"));
-//        if(can){
-//            accountRepository.deleteById(id);
-//        }else {
-//            throw new RuntimeException("You can't delete this account");
-//        }
-//    }
+   @Override
+    public AccountUserResponseModel deActivate(Long id, Long userId) throws NotFoundException {
+        Account account = accountRepository.getById(id);
+        if(!account.isActive()){
+            throw new NotFoundException("Already InActive ! ");
+        }
+        if(userRepository.getById(userId).getAuthorities().stream().map(authority -> authority.getName()).collect(Collectors.toSet()).contains(AuthorityType.ADMIN)
+                && account.getStatus().equals(Status.ACCEPTED)){
+            account.setActive(false);
+            account.setLastUpdated(new Date());
+        }else if(userRepository.getById(userId).getAuthorities().stream().map(authority -> authority.getName()).collect(Collectors.toSet()).contains(AuthorityType.USER)
+                && account.getStatus().equals(Status.PENDING)
+                && account.getUser().getId() == userId){
+            account.setActive(false);
+            account.setLastUpdated(new Date());
+        }
+        else{
+            throw new NotFoundException("You can't deActive this transactions");
+        }
+        return accountConverter.accountToResponse(accountRepository.save(account));
+    }
+
+    @Override
+    public AccountUserResponseModel activate(Long id, Long userId) throws NotFoundException {
+        Account account = accountRepository.getById(id);
+        if(account.isActive()){
+            throw new NotFoundException("Already Active !!");
+        }
+        if(userRepository.getById(userId).getAuthorities().stream().map(authority -> authority.getName()).collect(Collectors.toSet()).contains(AuthorityType.ADMIN)
+                && account.getStatus().equals(Status.ACCEPTED)){
+            account.setActive(true);
+            account.setLastUpdated(new Date());
+        }else if(userRepository.getById(userId).getAuthorities().stream().map(authority -> authority.getName()).collect(Collectors.toSet()).contains(AuthorityType.USER)
+                && account.getStatus().equals(Status.PENDING) && account.getUser().getId() == userId){
+            account.setActive(true);
+            account.setLastUpdated(new Date());
+        }
+/*
+        if(account.getUser().getId() != userId){
+            throw new NotFoundException("You can activate only your accounts");
+        }*/
+
+        return accountConverter.accountToResponse(accountRepository.save(account));
+
+    }
 }

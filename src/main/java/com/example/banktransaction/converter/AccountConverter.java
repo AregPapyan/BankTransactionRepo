@@ -27,6 +27,7 @@ public class AccountConverter {
         adminModel.setDateCreated(account.getDateCreated());
         adminModel.setLastUpdated(account.getLastUpdated());
         adminModel.setStatus(account.getStatus());
+        adminModel.setActive(account.isActive());
         adminModel.setUserAdminModel(userConverter.userToAdminModel(account.getUser()));
         return adminModel;
     }
@@ -44,6 +45,7 @@ public class AccountConverter {
         response.setDateCreated(account.getDateCreated());
         response.setLastUpdated(account.getLastUpdated());
         response.setStatus(account.getStatus());
+        response.setActive(account.isActive());
         return response;
     }
     public List<AccountUserResponseModel> accountsToResponses(List<Account> accounts){

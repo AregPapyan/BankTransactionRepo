@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-//@RequestMapping("/user")
 public class UserTestController {
     private final UserService userService;
 
@@ -51,7 +50,6 @@ public class UserTestController {
 
     @GetMapping("/login")
     public ResponseEntity<UserResponseModel> login(Authentication authentication){
-        //System.out.println("This point");
         Long id = userService.getIdByAuthentication(authentication);
         return ResponseEntity.ok(userService.get(id));
     }
