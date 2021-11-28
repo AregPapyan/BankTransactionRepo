@@ -9,10 +9,8 @@ import com.example.banktransaction.persistence.account.AccountRepository;
 import com.example.banktransaction.persistence.transaction.Transaction;
 import com.example.banktransaction.persistence.transaction.TransactionRepository;
 
-import javassist.tools.web.BadHttpRequest;
 import com.example.banktransaction.service.user.UserService;
 import javassist.NotFoundException;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,17 +22,16 @@ public class TransactionServiceImpl implements TransactionService{
     private final TransactionRepository transactionRepository;
     private final TransactionConverter transactionConverter;
     private final AccountRepository accountRepository;
-    private final UserService userService;
 
 
-    public TransactionServiceImpl(TransactionRepository transactionRepository, TransactionConverter transactionConverter, AccountRepository accountRepository, UserService userService) {
+    public TransactionServiceImpl(TransactionRepository transactionRepository, TransactionConverter transactionConverter, AccountRepository accountRepository) {
         this.transactionRepository = transactionRepository;
         this.transactionConverter = transactionConverter;
         this.accountRepository = accountRepository;
-        this.userService = userService;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TransactionUserResponseModel> getAllByUserId(Long id) {
         List<Transaction> allByUserId = transactionRepository.getAllByUserId(id);
         return transactionConverter.transactionsToResponses(allByUserId);
@@ -52,13 +49,6 @@ public class TransactionServiceImpl implements TransactionService{
         List<Transaction> all = transactionRepository.findAll();
         return transactionConverter.transactionsToAdminModels(all);
     }
-//    @Override
-//    @Transactional(readOnly = true)
-//    public List<TransactionUserResponseModel> getAllByUserId(Long id) {
-//        @@ -57,6 +71,22 @@ else if(accountRepository.getAccountByNumber(request.getFrom()).getStatus()!=Sta
-//        adding.setStatus(Status.PENDING);
-//        return transactionConverter.transactionToResponse(transactionRepository.save(adding));
-//    }
     @Override
     @Transactional
     public TransactionAdminModel accept(Long id){
@@ -73,6 +63,7 @@ public class TransactionServiceImpl implements TransactionService{
         Transaction byId = transactionRepository.getById(id);
         byId.setStatus(Status.REJECTED);
         byId.setLastUpdated(new Date());
+        byId.setActive(false);
         return transactionConverter.transactionToAdminModel(transactionRepository.save(byId));
     }
 
@@ -83,8 +74,10 @@ public class TransactionServiceImpl implements TransactionService{
             throw new NotFoundException("You can use only your accounts");
         }
         else if(accountRepository.getAccountByNumber(request.getFrom()).getStatus()!=Status.ACCEPTED
-                || accountRepository.getAccountByNumber(request.getTo()).getStatus()!=Status.ACCEPTED){
-            throw new NotFoundException("You can use only accepted accounts");
+                || accountRepository.getAccountByNumber(request.getTo()).getStatus()!=Status.ACCEPTED
+        || !accountRepository.getAccountByNumber(request.getFrom()).isActive()
+                || !accountRepository.getAccountByNumber(request.getTo()).isActive()){
+            throw new NotFoundException("You can use only active accepted accounts");
         }
         Transaction adding = transactionConverter.requestToTransaction(request);
         adding.setFrom(accountRepository.getAccountByNumber(request.getFrom()));
@@ -126,6 +119,7 @@ public class TransactionServiceImpl implements TransactionService{
     }
 
     @Override
+    @Transactional
     public TransactionUserResponseModel deActivate(Long id, Long userId) throws NotFoundException {
         Transaction transaction = transactionRepository.getById(id);
         if(!transaction.isActive()){
@@ -144,6 +138,7 @@ public class TransactionServiceImpl implements TransactionService{
     }
 
     @Override
+    @Transactional
     public TransactionUserResponseModel activate(Long id, Long userId) throws NotFoundException {
         Transaction transaction = transactionRepository.getById(id);
         if(transaction.isActive()){

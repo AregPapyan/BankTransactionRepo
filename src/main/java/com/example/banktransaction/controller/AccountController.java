@@ -33,6 +33,11 @@ public class AccountController {
     public ResponseEntity<List<AccountAdminModel>> getUserAccounts(@PathVariable Long id){
         return ResponseEntity.ok(accountService.getUserAccounts(id));
     }
+    @GetMapping("user/account/valid")
+    public ResponseEntity<List<AccountUserResponseModel>> getValidByUserId(Authentication authentication){
+        Long idByAuthentication = userService.getIdByAuthentication(authentication);
+        return ResponseEntity.ok(accountService.getValidByUserId(idByAuthentication));
+    }
     @GetMapping("/user/account")
     public ResponseEntity<List<AccountUserResponseModel>> getAllByUserId(Authentication authentication){
         Long id = userService.getIdByAuthentication(authentication);
@@ -42,6 +47,11 @@ public class AccountController {
     public ResponseEntity<AccountUserResponseModel> add(@RequestBody AccountUserRequestModel request,Authentication authentication){
         Long userId = userService.getIdByAuthentication(authentication);
         return ResponseEntity.ok(accountService.add(request, userId));
+    }
+    @PutMapping("/update-account/{number}")
+    public ResponseEntity<AccountUserResponseModel> update(@RequestBody AccountUserRequestModel request, @PathVariable String number, Authentication authentication) throws NotFoundException {
+        Long user_id = userService.getIdByAuthentication(authentication);
+        return ResponseEntity.ok(accountService.updateAccount(request,number,user_id));
     }
     @PutMapping("/account/accept/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
