@@ -1,6 +1,7 @@
 package com.example.banktransaction.service.user;
 
 import com.example.banktransaction.config.CustomUserDetail;
+import com.example.banktransaction.controller.dto.password.PasswordRequestModel;
 import com.example.banktransaction.controller.dto.user.UserAdminModel;
 import com.example.banktransaction.controller.dto.user.UserRequestModel;
 import com.example.banktransaction.controller.dto.user.UserResponseModel;
@@ -12,6 +13,7 @@ import com.example.banktransaction.persistence.user.User;
 import com.example.banktransaction.persistence.user.UserRepository;
 import javassist.NotFoundException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,13 +79,32 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    public UserResponseModel updatePassword(PasswordRequestModel request, Long user_id) throws NotFoundException {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+//        String encodedOldPass = bCryptPasswordEncoder.encode(request.getOldPassword());
+        User byId = userRepository.getById(user_id);
+//        System.out.println(byId.getPassword());
+//        System.out.println(encodedOldPass);
+        if(!BCrypt.checkpw(request.getOldPassword(),byId.getPassword())){
+            throw new NotFoundException("Wrong old password");
+        }
+        if(!request.getNewPassword().equals(request.getNewPasswordConfirmation())){
+            throw new NotFoundException("Confirm the password");
+        }
+        byId.setPassword(bCryptPasswordEncoder.encode(request.getNewPassword()));
+        User save = userRepository.save(byId);
+        return userConverter.userToResponse(save);
+    }
+
+    @Override
+    @Transactional
     public UserResponseModel update(UserRequestModel request, Long id){
         User updating = userRepository.getById(id);
         Date now = new Date();
         updating.setFirstName(request.getFirstName());
         updating.setLastName(request.getLastName());
         updating.setEmail(request.getEmail());
-        updating.setPassword(new BCryptPasswordEncoder().encode(request.getPassword()));
+        //updating.setPassword(new BCryptPasswordEncoder().encode(request.getPassword()));
         updating.setBirthDate(request.getBirthDate());
         updating.setMobile(request.getMobile());
         updating.getAddress().setCountry(request.getAddressRequest().getCountry());

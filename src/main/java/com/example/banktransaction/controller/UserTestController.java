@@ -1,5 +1,6 @@
 package com.example.banktransaction.controller;
 
+import com.example.banktransaction.controller.dto.password.PasswordRequestModel;
 import com.example.banktransaction.controller.dto.user.UserAdminModel;
 import com.example.banktransaction.controller.dto.user.UserRequestModel;
 import com.example.banktransaction.controller.dto.user.UserResponseModel;
@@ -36,7 +37,7 @@ public class UserTestController {
     }
     @GetMapping("/user")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public ResponseEntity<List<UserAdminModel>> getAll(Authentication authentication){
+    public ResponseEntity<List<UserAdminModel>> getAll(){
         return ResponseEntity.ok(userService.getAll());
     }
     @GetMapping("/user/{id}")
@@ -47,7 +48,11 @@ public class UserTestController {
     public ResponseEntity<UserResponseModel> add(@RequestBody UserRequestModel request){
         return ResponseEntity.ok(userService.add(request));
     }
-
+    @PutMapping("/user/password")
+    public ResponseEntity<UserResponseModel> updatePassword(@RequestBody PasswordRequestModel request, Authentication authentication) throws NotFoundException {
+        Long idByAuthentication = userService.getIdByAuthentication(authentication);
+        return ResponseEntity.ok(userService.updatePassword(request,idByAuthentication));
+    }
     @GetMapping("/login")
     public ResponseEntity<UserResponseModel> login(Authentication authentication){
         Long id = userService.getIdByAuthentication(authentication);
