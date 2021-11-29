@@ -40,6 +40,7 @@ public class AccountConverter {
     }
     public AccountUserResponseModel accountToResponse(Account account){
         AccountUserResponseModel response = new AccountUserResponseModel();
+        response.setId(account.getId());
         response.setNumber(account.getNumber());
         response.setCurrency(account.getCurrency());
         response.setDateCreated(account.getDateCreated());

@@ -38,12 +38,8 @@ public class TransactionController {
     public ResponseEntity<TransactionAdminModel> reject(@PathVariable Long id) {
         return ResponseEntity.ok(transactionService.reject(id));
     }
-    @GetMapping("/transaction")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public ResponseEntity<List<TransactionAdminModel>> getAllGrouped(){
-        return ResponseEntity.ok(transactionService.getAllOrdered());
-    }
     @GetMapping("/transaction/all")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<List<TransactionAdminModel>> getAll(){
         return ResponseEntity.ok(transactionService.getAll());
     }

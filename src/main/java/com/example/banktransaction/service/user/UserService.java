@@ -1,5 +1,6 @@
 package com.example.banktransaction.service.user;
 
+import com.example.banktransaction.controller.dto.password.PasswordRequestModel;
 import com.example.banktransaction.controller.dto.user.UserAdminModel;
 import com.example.banktransaction.controller.dto.user.UserRequestModel;
 import com.example.banktransaction.controller.dto.user.UserResponseModel;
@@ -18,4 +19,5 @@ public interface UserService {
     UserResponseModel update(UserRequestModel request, Long id);
     UserAdminModel deactivate(Long id);
     UserAdminModel activate(Long id);
+    UserResponseModel updatePassword(PasswordRequestModel request, Long user_id) throws NotFoundException;
 }

@@ -7,6 +7,7 @@ import java.util.Date;
 
 public class AccountUserResponseModel {
 
+    private Long id;
     private String number;
     private Currency currency;
     //The following 3 field are not needed(?)
@@ -14,6 +15,14 @@ public class AccountUserResponseModel {
     private Date lastUpdated;
     private Status status;
     private boolean isActive;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getNumber() {
         return number;

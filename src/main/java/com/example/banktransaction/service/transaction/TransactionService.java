@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface TransactionService {
     List<TransactionUserResponseModel> getAllByUserId(Long id);
-    List<TransactionAdminModel> getAllOrdered();
     List<TransactionAdminModel> getAll();
     TransactionAdminModel accept(Long id);
     TransactionAdminModel reject(Long id);
