@@ -39,12 +39,6 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     @Transactional(readOnly = true)
-    public List<TransactionAdminModel> getAllOrdered(){
-        List<Transaction> allGrouped = transactionRepository.getAllOrdered();
-        return transactionConverter.transactionsToAdminModels(allGrouped);
-    }
-    @Override
-    @Transactional(readOnly = true)
     public List<TransactionAdminModel> getAll(){
         List<Transaction> all = transactionRepository.findAll();
         return transactionConverter.transactionsToAdminModels(all);
