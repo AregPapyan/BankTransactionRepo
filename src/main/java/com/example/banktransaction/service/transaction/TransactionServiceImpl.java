@@ -52,7 +52,7 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     @Transactional
-    public TransactionUserResponseModel add(TransactionUserRequestModel request, Long userId) throws NotFoundException {
+    public TransactionUserResponseModel add(TransactionUserRequestModel request, Long userId){
 
  if(accountRepository.getAccountByNumber(request.getFrom()).getUser().getId()!=userId){
             throw new AuthorityException("You can use only your accounts");
@@ -92,7 +92,7 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     @Transactional
-    public TransactionUserResponseModel update(Long id, TransactionUserRequestModel transactionUserRequestModel, Long userId) throws NotFoundException {
+    public TransactionUserResponseModel update(Long id, TransactionUserRequestModel transactionUserRequestModel, Long userId)  {
         if(userId == transactionRepository.getById(id).getFrom().getUser().getId()){
 
             Transaction transaction = transactionRepository.getById(id);
@@ -119,7 +119,7 @@ public class TransactionServiceImpl implements TransactionService{
     }
 
     @Override
-    public TransactionUserResponseModel deActivate(Long id, Long userId) throws NotFoundException {
+    public TransactionUserResponseModel deActivate(Long id, Long userId)  {
         Transaction transaction = transactionRepository.getById(id);
         if(!transaction.isActive()){
             throw new ActivationException("Already inactive");
@@ -137,7 +137,7 @@ public class TransactionServiceImpl implements TransactionService{
     }
 
     @Override
-    public TransactionUserResponseModel activate(Long id, Long userId) throws NotFoundException {
+    public TransactionUserResponseModel activate(Long id, Long userId) {
         Transaction transaction = transactionRepository.getById(id);
         if(transaction.isActive()){
             throw new ActivationException("Already Active");
