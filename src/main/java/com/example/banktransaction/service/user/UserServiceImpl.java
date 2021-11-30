@@ -57,7 +57,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserResponseModel add(UserRequestModel request) {
-        System.out.println(request.getEmail() + "1111111111111111111111111111111111111");
         if(!PasswordValidation.isValid(request.getPassword())){
             throw new APIRequestException("The password must contain at least eight characters, at least one uppercase, one lowercase և one number.");
         }
