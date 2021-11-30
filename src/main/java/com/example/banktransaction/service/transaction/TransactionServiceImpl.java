@@ -53,12 +53,15 @@ public class TransactionServiceImpl implements TransactionService{
     @Override
     @Transactional
     public TransactionUserResponseModel add(TransactionUserRequestModel request, Long userId) throws NotFoundException {
-        if(accountRepository.getAccountByNumber(request.getFrom()).getUser().getId()!=userId){
+
+ if(accountRepository.getAccountByNumber(request.getFrom()).getUser().getId()!=userId){
             throw new AuthorityException("You can use only your accounts");
         }
         else if(accountRepository.getAccountByNumber(request.getFrom()).getStatus()!=Status.ACCEPTED
-                || accountRepository.getAccountByNumber(request.getTo()).getStatus()!=Status.ACCEPTED){
-            throw new StatusException("You can use only accepted accounts");
+                || accountRepository.getAccountByNumber(request.getTo()).getStatus()!=Status.ACCEPTED
+        || !accountRepository.getAccountByNumber(request.getFrom()).isActive()
+                || !accountRepository.getAccountByNumber(request.getTo()).isActive()){
+            throw new StatusException("You can use only active accepted accounts");
         }
         Transaction adding = transactionConverter.requestToTransaction(request);
         adding.setFrom(accountRepository.getAccountByNumber(request.getFrom()));
