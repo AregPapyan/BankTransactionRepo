@@ -5,6 +5,7 @@ import com.example.banktransaction.controller.dto.transaction.TransactionUserReq
 import com.example.banktransaction.controller.dto.transaction.TransactionUserResponseModel;
 
 import javassist.NotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

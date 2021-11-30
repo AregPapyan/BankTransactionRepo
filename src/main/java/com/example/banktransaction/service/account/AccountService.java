@@ -7,6 +7,7 @@ import com.example.banktransaction.persistence.account.Account;
 import javassist.NotFoundException;
 import org.springframework.security.core.Authentication;
 
+import java.rmi.activation.ActivationException;
 import java.util.List;
 
 public interface AccountService {
@@ -18,6 +19,6 @@ public interface AccountService {
     AccountAdminModel accept(Long id);
     AccountAdminModel reject(Long id);
     AccountUserResponseModel updateAccount(AccountUserRequestModel accountUserRequestModel,String number, Long userId) throws NotFoundException;
-    AccountUserResponseModel deActivate(Long id, Long userId) throws NotFoundException;
+    AccountUserResponseModel deActivate(Long id, Long userId) throws  ActivationException;
     AccountUserResponseModel activate(Long id, Long userId) throws NotFoundException;
 }

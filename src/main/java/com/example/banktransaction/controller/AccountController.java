@@ -3,6 +3,8 @@ package com.example.banktransaction.controller;
 import com.example.banktransaction.controller.dto.account.AccountAdminModel;
 import com.example.banktransaction.controller.dto.account.AccountUserRequestModel;
 import com.example.banktransaction.controller.dto.account.AccountUserResponseModel;
+import com.example.banktransaction.controller.dto.transaction.TransactionUserRequestModel;
+import com.example.banktransaction.controller.dto.transaction.TransactionUserResponseModel;
 import com.example.banktransaction.service.account.AccountService;
 import com.example.banktransaction.service.user.UserService;
 import javassist.NotFoundException;
@@ -11,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.rmi.activation.ActivationException;
 import java.util.List;
 
 @RestController
@@ -65,7 +68,7 @@ public class AccountController {
     }
 
     @PutMapping("/account-de-activate/{id}")
-    public ResponseEntity<AccountUserResponseModel> deActivate(@PathVariable Long id, Authentication authentication) throws NotFoundException {
+    public ResponseEntity<AccountUserResponseModel> deActivate(@PathVariable Long id, Authentication authentication) throws ActivationException, NotFoundException {
         Long userId = userService.getIdByAuthentication(authentication);
         return ResponseEntity.ok(accountService.deActivate(id, userId));
     }

@@ -6,11 +6,13 @@ import com.example.banktransaction.controller.dto.user.UserAdminModel;
 import com.example.banktransaction.controller.dto.user.UserRequestModel;
 import com.example.banktransaction.controller.dto.user.UserResponseModel;
 import com.example.banktransaction.converter.UserConverter;
+import com.example.banktransaction.exception.APIRequestException;
 import com.example.banktransaction.persistence.authority.Authority;
 import com.example.banktransaction.persistence.authority.AuthorityRepository;
 import com.example.banktransaction.persistence.authority.AuthorityType;
 import com.example.banktransaction.persistence.user.User;
 import com.example.banktransaction.persistence.user.UserRepository;
+import com.example.banktransaction.validation.PasswordValidation;
 import javassist.NotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -55,6 +57,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserResponseModel add(UserRequestModel request) {
+        if(!PasswordValidation.isValid(request.getPassword())){
+            throw new APIRequestException("The password must contain at least eight characters, at least one uppercase, one lowercase և one number.");
+        }
         User adding = userConverter.requestToUser(request);
         Date now = new Date();
         adding.setDateCreated(now);
@@ -80,6 +85,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserResponseModel updatePassword(PasswordRequestModel request, Long user_id) throws NotFoundException {
+
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 //        String encodedOldPass = bCryptPasswordEncoder.encode(request.getOldPassword());
         User byId = userRepository.getById(user_id);
@@ -91,6 +97,9 @@ public class UserServiceImpl implements UserService {
         if(!request.getNewPassword().equals(request.getNewPasswordConfirmation())){
             throw new NotFoundException("Confirm the password");
         }
+        if(!PasswordValidation.isValid(request.getNewPassword())){
+            throw new APIRequestException("The Password must contain Minimum eight characters, at least one uppercase letter, one lowercase letter and one number:");
+        }
         byId.setPassword(bCryptPasswordEncoder.encode(request.getNewPassword()));
         User save = userRepository.save(byId);
         return userConverter.userToResponse(save);
@@ -100,6 +109,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserResponseModel update(UserRequestModel request, Long id){
         User updating = userRepository.getById(id);
+      
         Date now = new Date();
         updating.setFirstName(request.getFirstName());
         updating.setLastName(request.getLastName());
@@ -135,6 +145,7 @@ public class UserServiceImpl implements UserService {
         return userConverter.userToAdminModel(userRepository.save(byId));
     }
     @Override
+    @Transactional
     public Long getIdByAuthentication(Authentication authentication) {
         CustomUserDetail userDetails = (CustomUserDetail) authentication.getPrincipal();
         return userDetails.getId();

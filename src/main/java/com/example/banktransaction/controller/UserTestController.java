@@ -40,6 +40,7 @@ public class UserTestController {
     public ResponseEntity<List<UserAdminModel>> getAll(){
         return ResponseEntity.ok(userService.getAll());
     }
+
     @GetMapping("/user/{id}")
     public ResponseEntity<UserResponseModel> get(@PathVariable Long id){
         return ResponseEntity.ok(userService.get(id));
