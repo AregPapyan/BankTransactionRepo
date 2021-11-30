@@ -94,7 +94,7 @@ public class TransactionServiceImpl implements TransactionService{
 
             Transaction transaction = transactionRepository.getById(id);
             if(transaction.getStatus()==Status.PENDING){
-                if(accountRepository.getAccountByNumber(transactionUserRequestModel.getTo()).getStatus() == Status.PENDING){
+                if(accountRepository.getAccountByNumber(transactionUserRequestModel.getTo()).getStatus() == Status.ACCEPTED){
                     transaction.setAmount(transactionUserRequestModel.getAmount());
                     transaction.setType(transactionUserRequestModel.getType());
                     transaction.setTo(accountRepository.getAccountByNumber(transactionUserRequestModel.getTo()));
