@@ -94,7 +94,7 @@ public class AccountServiceImpl implements AccountService{
     }
 
   @Override
-    public AccountUserResponseModel updateAccount(AccountUserRequestModel accountUserRequestModel,String number,  Long userId) throws NotFoundException {
+    public AccountUserResponseModel updateAccount(AccountUserRequestModel accountUserRequestModel,String number,  Long userId) {
         Account accountByNumber = accountRepository.getAccountByNumber(number);
         if(accountByNumber.getUser().getId()!=userId){
             throw new AuthorityException("You can update only your accounts");
@@ -133,7 +133,7 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public AccountUserResponseModel activate(Long id, Long userId) throws NotFoundException {
+    public AccountUserResponseModel activate(Long id, Long userId){
         Account account = accountRepository.getById(id);
         if(account.isActive()){
             throw new ActivationException("Already Active !!");
