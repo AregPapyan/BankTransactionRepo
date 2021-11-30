@@ -110,13 +110,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserResponseModel update(UserRequestModel request, Long id){
         User updating = userRepository.getById(id);
-        boolean isPasswordMatches = new BCryptPasswordEncoder().matches(
-                request.getPassword(),
-                updating.getPassword()
-        );
-        if(!isPasswordMatches){
-            throw new APIRequestException("For updating our profile write your old password");
-        }
+      
         Date now = new Date();
         updating.setFirstName(request.getFirstName());
         updating.setLastName(request.getLastName());
