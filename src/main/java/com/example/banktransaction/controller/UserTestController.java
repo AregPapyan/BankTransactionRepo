@@ -42,6 +42,7 @@ public class UserTestController {
     }
 
     @GetMapping("/user/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<UserResponseModel> get(@PathVariable Long id){
         return ResponseEntity.ok(userService.get(id));
     }
@@ -50,7 +51,7 @@ public class UserTestController {
         return ResponseEntity.ok(userService.add(request));
     }
     @PutMapping("/user/password")
-    public ResponseEntity<UserResponseModel> updatePassword(@RequestBody PasswordRequestModel request, Authentication authentication) throws NotFoundException {
+    public ResponseEntity<UserResponseModel> updatePassword(@RequestBody PasswordRequestModel request, Authentication authentication){
         Long idByAuthentication = userService.getIdByAuthentication(authentication);
         return ResponseEntity.ok(userService.updatePassword(request,idByAuthentication));
     }
