@@ -5,6 +5,7 @@ import com.example.banktransaction.controller.dto.account.AccountUserRequestMode
 import com.example.banktransaction.controller.dto.account.AccountUserResponseModel;
 import com.example.banktransaction.controller.dto.transaction.TransactionUserRequestModel;
 import com.example.banktransaction.controller.dto.transaction.TransactionUserResponseModel;
+import com.example.banktransaction.exception.ActivationException;
 import com.example.banktransaction.service.account.AccountService;
 import com.example.banktransaction.service.user.UserService;
 import javassist.NotFoundException;
@@ -13,7 +14,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.rmi.activation.ActivationException;
 import java.util.List;
 
 @RestController
