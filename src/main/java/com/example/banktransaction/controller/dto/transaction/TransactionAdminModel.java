@@ -10,6 +10,7 @@ public class TransactionAdminModel {
     private Long id;
     private TransactionType type;
     private Double amount;
+    private Double toAmount;
     private AccountAdminModel from;
     private AccountAdminModel to;
     private Date dateCreated;
@@ -39,6 +40,14 @@ public class TransactionAdminModel {
 
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+
+    public Double getToAmount() {
+        return toAmount;
+    }
+
+    public void setToAmount(Double toAmount) {
+        this.toAmount = toAmount;
     }
 
     public AccountAdminModel getFrom() {

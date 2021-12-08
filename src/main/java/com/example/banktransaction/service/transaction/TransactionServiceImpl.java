@@ -4,21 +4,23 @@ import com.example.banktransaction.controller.dto.transaction.TransactionAdminMo
 import com.example.banktransaction.controller.dto.transaction.TransactionUserRequestModel;
 import com.example.banktransaction.controller.dto.transaction.TransactionUserResponseModel;
 import com.example.banktransaction.converter.TransactionConverter;
+import com.example.banktransaction.exception.APIRequestException;
 import com.example.banktransaction.exception.ActivationException;
 import com.example.banktransaction.exception.AuthorityException;
 import com.example.banktransaction.exception.StatusException;
 import com.example.banktransaction.persistence.Status;
+import com.example.banktransaction.persistence.account.Account;
 import com.example.banktransaction.persistence.account.AccountRepository;
 import com.example.banktransaction.persistence.transaction.Transaction;
 import com.example.banktransaction.persistence.transaction.TransactionRepository;
 
-import javassist.tools.web.BadHttpRequest;
-import com.example.banktransaction.service.user.UserService;
-import javassist.NotFoundException;
-import org.springframework.security.core.Authentication;
+import com.example.banktransaction.persistence.transaction.TransactionType;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,14 +29,14 @@ public class TransactionServiceImpl implements TransactionService{
     private final TransactionRepository transactionRepository;
     private final TransactionConverter transactionConverter;
     private final AccountRepository accountRepository;
-    private final UserService userService;
+    private final RestTemplate restTemplate;
 
 
-    public TransactionServiceImpl(TransactionRepository transactionRepository, TransactionConverter transactionConverter, AccountRepository accountRepository, UserService userService) {
+    public TransactionServiceImpl(TransactionRepository transactionRepository, TransactionConverter transactionConverter, AccountRepository accountRepository, RestTemplateBuilder restTemplateBuilder) {
         this.transactionRepository = transactionRepository;
         this.transactionConverter = transactionConverter;
         this.accountRepository = accountRepository;
-        this.userService = userService;
+        this.restTemplate = restTemplateBuilder.build();;
     }
 
     @Override
@@ -54,7 +56,7 @@ public class TransactionServiceImpl implements TransactionService{
     @Transactional
     public TransactionUserResponseModel add(TransactionUserRequestModel request, Long userId){
 
- if(accountRepository.getAccountByNumber(request.getFrom()).getUser().getId()!=userId){
+        if(accountRepository.getAccountByNumber(request.getFrom()).getUser().getId()!=userId){
             throw new AuthorityException("You can use only your accounts");
         }
         else if(accountRepository.getAccountByNumber(request.getFrom()).getStatus()!=Status.ACCEPTED
@@ -62,10 +64,36 @@ public class TransactionServiceImpl implements TransactionService{
         || !accountRepository.getAccountByNumber(request.getFrom()).isActive()
                 || !accountRepository.getAccountByNumber(request.getTo()).isActive()){
             throw new StatusException("You can use only active accepted accounts");
+        }else if(request.getType().equals(TransactionType.EXCHANGE) && request.getFrom().equals(request.getTo())){
+            throw new APIRequestException("Choose different accounts as sender and receiver");
+        }else if(!request.getType().equals(TransactionType.EXCHANGE) && !request.getFrom().equals(request.getTo())){
+            throw new APIRequestException("Choose the same account as sender and receiver");
+        }else if(request.getType().equals(TransactionType.WITHDRAWAL) || request.getType().equals(TransactionType.EXCHANGE)){
+            List<Transaction> allByUserId = transactionRepository.getAllByUserId(userId);
+            List<Account> curAccount = new ArrayList<>();
+            curAccount.add(accountRepository.getAccountByNumber(request.getFrom()));
+            if(getBalance(allByUserId,curAccount).get(0)-request.getAmount()<0){
+                throw new APIRequestException("Not enough balance");
+            }
         }
         Transaction adding = transactionConverter.requestToTransaction(request);
         adding.setFrom(accountRepository.getAccountByNumber(request.getFrom()));
         adding.setTo(accountRepository.getAccountByNumber(request.getTo()));
+        if(request.getType().equals(TransactionType.EXCHANGE)){
+            String grailsUrl = "http://localhost:8080/exchange/exchange?fromCur="
+                    +
+                    adding.getFrom().getCurrency().name()
+                    +
+                    "&toCur="
+                    +
+                    adding.getTo().getCurrency().name()
+                    +
+                    "&amount="
+                    +
+                    request.getAmount();
+            String toAmountString = restTemplate.getForObject(grailsUrl, String.class);
+            adding.setToAmount(Double.valueOf(toAmountString));
+        }
         adding.setActive(true);
         Date now = new Date();
         adding.setDateCreated(now);
@@ -92,15 +120,31 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     @Transactional
-    public TransactionUserResponseModel update(Long id, TransactionUserRequestModel transactionUserRequestModel, Long userId)  {
+    public TransactionUserResponseModel update(Long id, TransactionUserRequestModel request, Long userId)  {
         if(userId == transactionRepository.getById(id).getFrom().getUser().getId()){
-
+            if(accountRepository.getAccountByNumber(request.getFrom()).getStatus()!=Status.ACCEPTED
+                    || accountRepository.getAccountByNumber(request.getTo()).getStatus()!=Status.ACCEPTED
+                    || !accountRepository.getAccountByNumber(request.getFrom()).isActive()
+                    || !accountRepository.getAccountByNumber(request.getTo()).isActive()){
+                throw new StatusException("You can use only active accepted accounts");
+            }else if(request.getType().equals(TransactionType.EXCHANGE) && request.getFrom().equals(request.getTo())){
+                throw new APIRequestException("Choose different accounts as sender and receiver");
+            }else if(!request.getType().equals(TransactionType.EXCHANGE) && !request.getFrom().equals(request.getTo())){
+                throw new APIRequestException("Choose the same account as sender and receiver");
+            }else if(request.getType().equals(TransactionType.WITHDRAWAL) || request.getType().equals(TransactionType.EXCHANGE)){
+                List<Transaction> allByUserId = transactionRepository.getAllByUserId(userId);
+                List<Account> curAccount = new ArrayList<>();
+                curAccount.add(accountRepository.getAccountByNumber(request.getFrom()));
+                if(getBalance(allByUserId,curAccount).get(0)-request.getAmount()<0){
+                    throw new APIRequestException("Not enough balance");
+                }
+            }
             Transaction transaction = transactionRepository.getById(id);
             if(transaction.getStatus()==Status.PENDING){
-                if(accountRepository.getAccountByNumber(transactionUserRequestModel.getTo()).getStatus() == Status.ACCEPTED){
-                    transaction.setAmount(transactionUserRequestModel.getAmount());
-                    transaction.setType(transactionUserRequestModel.getType());
-                    transaction.setTo(accountRepository.getAccountByNumber(transactionUserRequestModel.getTo()));
+                if(accountRepository.getAccountByNumber(request.getTo()).getStatus() == Status.ACCEPTED){
+                    transaction.setAmount(request.getAmount());
+                    transaction.setType(request.getType());
+                    transaction.setTo(accountRepository.getAccountByNumber(request.getTo()));
                     Date now = new Date();
                     transaction.setLastUpdated(now);
                     return transactionConverter.transactionToResponse(transactionRepository.save(transaction));
@@ -150,5 +194,53 @@ public class TransactionServiceImpl implements TransactionService{
         }
         return transactionConverter.transactionToResponse(transactionRepository.save(transaction));
     }
+    //Balance
+    @Override
+    public List<Double> balance(Long id) {
 
+        List<Account> accounts = accountRepository.getAllByUserId(id);
+        List<Transaction> transactions = transactionRepository.getAllByUserId(id);
+
+
+        return getBalance(transactions, accounts);
+    }
+
+
+    public List<Double> getBalance(List<Transaction> transactions, List<Account> accounts) {
+        List<Double> balances = new ArrayList<>();
+        for (Account account : accounts) {
+            double balance = 0.0;
+            List<Transaction> addingByAccount = transactionRepository.getAddingByAccount(account.getNumber());
+            for (Transaction tr : addingByAccount) {
+                if (!tr.getStatus().equals(Status.ACCEPTED)) {
+                    continue;
+                }
+                if (tr.getType().equals(TransactionType.DEPOSIT)) {
+                    balance += tr.getAmount();
+                } else {
+                    balance += tr.getToAmount();
+                }
+            }
+            for (Transaction transaction : transactions) {
+                if (!transaction.getStatus().equals(Status.ACCEPTED)) {
+                    continue;
+                }
+                if (transaction.getType().equals(TransactionType.DEPOSIT)) {
+                    continue;
+                }
+                if (account.getNumber().equals(transaction.getFrom().getNumber())) {
+                    balance -= transaction.getAmount();
+                }
+//                else {
+//                    if (transaction.getType().equals(TransactionType.EXCHANGE)) {
+//                        balance += transaction.getToAmount();
+//                    }
+//                }
+            }
+            balances.add(balance);
+        }
+
+
+        return balances;
+    }
 }

@@ -29,6 +29,7 @@ public class TransactionConverter {
         adminModel.setId(transaction.getId());
         adminModel.setType(transaction.getType());
         adminModel.setAmount(transaction.getAmount());
+        adminModel.setToAmount(transaction.getToAmount());
         adminModel.setFrom(accountConverter.accountToAdminModel(transaction.getFrom()));
         adminModel.setTo(accountConverter.accountToAdminModel(transaction.getTo()));
         adminModel.setDateCreated(transaction.getDateCreated());
