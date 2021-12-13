@@ -143,8 +143,26 @@ public class TransactionServiceImpl implements TransactionService{
             if(transaction.getStatus()==Status.PENDING){
                 if(accountRepository.getAccountByNumber(request.getTo()).getStatus() == Status.ACCEPTED){
                     transaction.setAmount(request.getAmount());
+                    if(request.getType().equals(TransactionType.EXCHANGE) && !transaction.getType().equals(TransactionType.EXCHANGE)){
+                        String grailsUrl = "http://localhost:8080/exchange/exchange?fromCur="
+                                +
+                                transaction.getFrom().getCurrency().name()
+                                +
+                                "&toCur="
+                                +
+                                transaction.getTo().getCurrency().name()
+                                +
+                                "&amount="
+                                +
+                                request.getAmount();
+                        String toAmountString = restTemplate.getForObject(grailsUrl, String.class);
+                        transaction.setToAmount(Double.valueOf(toAmountString));
+                    }else if(!request.getType().equals(TransactionType.EXCHANGE) && transaction.getType().equals(TransactionType.EXCHANGE)){
+                        transaction.setToAmount(null);
+                    }
                     transaction.setType(request.getType());
                     transaction.setTo(accountRepository.getAccountByNumber(request.getTo()));
+
                     Date now = new Date();
                     transaction.setLastUpdated(now);
                     return transactionConverter.transactionToResponse(transactionRepository.save(transaction));

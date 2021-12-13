@@ -43,7 +43,12 @@ async function updateTransaction(){
 	let type = document.getElementsByName("type")[0].value;
  	let amount = document.getElementsByName("amount")[0].value;
   let from = document.getElementsByName("accs")[0].value;
-  let to = document.getElementsByName("to")[0].value;
+  let to = document.getElementsByName("to")[0];
+  if(to==null){
+      to=from;
+  }else{
+      to=to.value;
+  }
 
  	const transaction = {
  		type:type,
