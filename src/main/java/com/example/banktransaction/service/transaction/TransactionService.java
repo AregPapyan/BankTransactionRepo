@@ -18,4 +18,6 @@ public interface TransactionService {
     TransactionUserResponseModel update(Long id, TransactionUserRequestModel transactionUserRequestModel, Long userId) throws NotFoundException;
     TransactionUserResponseModel deActivate(Long id, Long userId) throws NotFoundException;
     TransactionUserResponseModel activate(Long id, Long userId) throws NotFoundException;
+    //Balance
+    List<Double> balance(Long id);
 }

@@ -70,6 +70,12 @@ public class TransactionController {
         return ResponseEntity.ok(transactionService.activate(id, userId));
     }
 
-
+    //Balance
+    @GetMapping("/balance")
+    @PreAuthorize("hasAnyAuthority('USER')")
+    public ResponseEntity<List<Double>> getBalance(Authentication authentication){
+        Long userId = userService.getIdByAuthentication(authentication);
+        return ResponseEntity.ok(transactionService.balance(userId));
+    }
 
 }

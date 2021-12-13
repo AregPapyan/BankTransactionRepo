@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Update Personal Info</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script type="text/javascript" src="update-user.js"></script> 
+</head>
+<body>
+    <form>
+        <div class="container col-md-6">
+            <h2>Update Your Profile</h2>
+            <div class="form-group">
+                <label for="firstName">First Name</label><br>
+                <input type="text" class="form-control" placeholder="Enter First Name" name="firstName"><br>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label><br>
+                <input type="text" class="form-control" placeholder="Enter Last Name" name="lastName"><br>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label><br>
+                <input type="email" class="form-control" placeholder="Enter Email" name="email"><br>
+            </div>
+            <!-- <div class="form-group">
+                <label for="password">Password</label><br>
+                <input type="password" class="form-control" placeholder="Enter Password" name="password"><br>
+            </div> -->
+            <div class="form-group">
+                <label for="birthDate">Birth Date</label><br>
+                <input type="date" class="form-control" placeholder="Enter Birth Date" name="birthDate"><br>
+            </div>
+            <div class="form-group">
+                <label for="mobile">Mobile</label><br>
+                <input type="text" class="form-control" placeholder="Enter Mobile" name="mobile"><br>
+            </div>
+            <div class="form-group">
+                <label for="country">Country</label><br>
+                <input type="text" class="form-control" placeholder="Enter Country" name="country"><br>
+            </div>
+            <div class="form-group">
+                <label for="city">City</label><br>
+                <input type="text" class="form-control" placeholder="Enter City" name="city"><br>
+            </div>
+            <div class="form-group">
+                <label for="street">Street</label><br>
+                <input type="text" class="form-control" placeholder="Enter Street" name="street"><br>
+            </div>
+            <div class="form-group">
+                <label for="houseNumber">House Number</label><br>
+                <input type="text" class="form-control" placeholder="Enter House Number" name="houseNumber"><br>
+            </div>
+            <div class="form-group">
+                <label for="postalCode">Postal Code</label><br>
+                <input type="text" class="form-control" placeholder="Enter Postal Code" name="postalCode"><br>
+            </div>
+            <input type="button" value="Update" class="btn btn-primary" onclick="updateUser()">
+            <input type="button" value="Cancel" class="btn btn-danger" onclick="window.location.replace('../Home/home.html')">
+        </div>
+    </form>
+    <script type="text/javascript">
+        window.onload = ()=>{
+            let firstName = localStorage.getItem("firstName");
+            let lastName = localStorage.getItem("lastName");
+            let email = localStorage.getItem("email");
+            let birthDate = localStorage.getItem("birthDate");
+            let mobile = localStorage.getItem("mobile");
+            let country = localStorage.getItem("country");
+            let city = localStorage.getItem("city");
+            let street = localStorage.getItem("street");
+            let houseNumber = localStorage.getItem("houseNumber");
+            let postalCode = localStorage.getItem("postalCode");
+            let inputs = document.getElementsByTagName('input');
+            inputs[0].value = firstName;
+            inputs[1].value = lastName;
+            inputs[2].value = email;
+            inputs[3].value = birthDate;
+            inputs[4].value = mobile;
+            inputs[5].value = country;
+            inputs[6].value = city;
+            inputs[7].value = street;
+            inputs[8].value = houseNumber;
+            inputs[9].value = postalCode;
+        }
+    </script>
+</body>
+</html>

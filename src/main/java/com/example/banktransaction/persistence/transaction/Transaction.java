@@ -13,6 +13,7 @@ public class Transaction {
     private Long id;
     private TransactionType type;
     private Double amount;
+    private Double toAmount;
     @ManyToOne
     private Account from;
     @ManyToOne
@@ -41,6 +42,14 @@ public class Transaction {
 
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+
+    public Double getToAmount() {
+        return toAmount;
+    }
+
+    public void setToAmount(Double toAmount) {
+        this.toAmount = toAmount;
     }
 
     public Account getFrom() {
